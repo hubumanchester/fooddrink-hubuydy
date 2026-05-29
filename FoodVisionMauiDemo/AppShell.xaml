@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FoodVisionMauiDemo.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:FoodVisionMauiDemo"
+    xmlns:views="clr-namespace:FoodVisionMauiDemo.Views"
+    Shell.FlyoutBehavior="Disabled"
+    Title="FoodVisionMauiDemo">
+
+    <ShellContent
+        Title="Vision Scan"
+        ContentTemplate="{DataTemplate views:VisionScanPage}"
+        Route="VisionScanPage" />
+
+</Shell>

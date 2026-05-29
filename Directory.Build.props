@@ -1,8 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <DefaultItemExcludes>$(DefaultItemExcludes);bin\**;obj\**</DefaultItemExcludes>
-    <BaseIntermediateOutputPath>C:\MauiBuild\$(MSBuildProjectName)\obj\</BaseIntermediateOutputPath>
-    <BaseOutputPath>C:\MauiBuild\$(MSBuildProjectName)\bin\</BaseOutputPath>
-    <UseSharedCompilation>false</UseSharedCompilation>
-  </PropertyGroup>
-</Project>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FoodVisionMauiDemo.Views.VisionScanPage"
+             Title="Vision Food Scan">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="Vision Food Scan"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <Label Text="Take or select a food image, then run local MobileNetV2 Food-101 classification."
+                   FontSize="14"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- Image Preview -->
+            <Frame BorderColor="LightGray" CornerRadius="8" Padding="4"
+                   HeightRequest="260" WidthRequest="260"
+                   HorizontalOptions="Center">
+                <Image x:Name="ImagePreview"
+                       Aspect="AspectFit"
+                       HeightRequest="250" WidthRequest="250" />
+            </Frame>
+
+            <!-- Buttons row -->
+            <FlexLayout Direction="Row" JustifyContent="Center" Wrap="Wrap">
+                <Button x:Name="BtnTakePhoto"
+                        Text="Take Photo"
+                        Clicked="OnTakePhotoClicked"
+                        Margin="5" />
+                <Button x:Name="BtnPickTestImage"
+                        Text="Pick Test Image"
+                        Clicked="OnPickTestImageClicked"
+                        Margin="5" />
+                <Button x:Name="BtnAnalyse"
+                        Text="Analyse Food"
+                        Clicked="OnAnalyseFoodClicked"
+                        BackgroundColor="#2563EB"
+                        TextColor="White"
+                        Margin="5" />
+            </FlexLayout>
+
+            <!-- Loading indicator -->
+            <ActivityIndicator x:Name="LoadingIndicator"
+                               IsVisible="False"
+                               IsRunning="False"
+                               Color="#2563EB"
+                               HorizontalOptions="Center" />
+
+            <!-- Status label -->
+            <Label x:Name="StatusLabel"
+                   FontSize="16"
+                   FontAttributes="Italic"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- Top-3 Results -->
+            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="12"
+                   IsVisible="False" x:Name="ResultsFrame">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Top-3 Predictions"
+                           FontSize="18"
+                           FontAttributes="Bold" />
+                    <Label x:Name="Result1" FontSize="16" />
+                    <Label x:Name="Result2" FontSize="15" TextColor="Gray" />
+                    <Label x:Name="Result3" FontSize="15" TextColor="Gray" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

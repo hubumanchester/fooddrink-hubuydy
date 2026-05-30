@@ -21,7 +21,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>FoodVisionMauiDemo</ApplicationTitle>
+		<ApplicationTitle>NutriLens KG</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.foodvisionmauidemo</ApplicationId>
@@ -62,6 +62,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
 		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.19.2" />
 		<PackageReference Include="SkiaSharp" Version="2.88.9" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 	</ItemGroup>
 
 </Project>

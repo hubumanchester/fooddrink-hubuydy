@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:FoodVisionMauiDemo.Models"
+             xmlns:viewModels="clr-namespace:FoodVisionMauiDemo.ViewModels"
+             x:Class="FoodVisionMauiDemo.Views.NearbyFoodPage"
+             x:DataType="viewModels:NearbyFoodViewModel"
+             Title="Nearby Food">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+            <Label Text="Nearby Food"
+                   FontSize="28"
+                   FontAttributes="Bold" />
+
+            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Current Risk Focus"
+                           FontSize="13"
+                           TextColor="Gray" />
+                    <Label Text="{Binding RiskDisplayName}"
+                           FontSize="22"
+                           FontAttributes="Bold" />
+                    <Label Text="{Binding SearchKeywords}"
+                           FontSize="15"
+                           TextColor="#2563EB" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Label Text="{Binding StatusMessage}"
+                   FontSize="16"
+                   TextColor="Gray" />
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
+                               Color="#2563EB" />
+
+            <Frame BorderColor="#FCA5A5"
+                   BackgroundColor="#FEF2F2"
+                   CornerRadius="8"
+                   Padding="14"
+                   IsVisible="{Binding HasError}">
+                <Label Text="{Binding StatusMessage}"
+                       FontSize="15"
+                       TextColor="#991B1B"
+                       LineBreakMode="WordWrap" />
+            </Frame>
+
+            <CollectionView ItemsSource="{Binding Places}"
+                            IsVisible="{Binding HasPlaces}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:NearbyPlace">
+                        <Frame BorderColor="#E5E7EB"
+                               CornerRadius="8"
+                               Padding="14"
+                               Margin="0,0,0,10">
+                            <VerticalStackLayout Spacing="6">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="18"
+                                           FontAttributes="Bold" />
+                                    <Label Grid.Column="1"
+                                           Text="{Binding DistanceText}"
+                                           FontSize="14"
+                                           TextColor="#2563EB" />
+                                </Grid>
+                                <Label Text="{Binding Type}"
+                                       FontSize="14"
+                                       TextColor="Gray"
+                                       LineBreakMode="WordWrap" />
+                                <Label Text="{Binding Address}"
+                                       FontSize="15"
+                                       LineBreakMode="WordWrap" />
+                                <Label Text="{Binding TelText}"
+                                       FontSize="14"
+                                       TextColor="Gray" />
+                                <Label Text="{Binding RecommendationReason}"
+                                       FontSize="14"
+                                       TextColor="#16A34A"
+                                       LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Text="Refresh Places"
+                    Command="{Binding RefreshPlacesCommand}"
+                    BackgroundColor="#2563EB"
+                    TextColor="White" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

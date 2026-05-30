@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:FoodVisionMauiDemo.Models"
+             xmlns:viewModels="clr-namespace:FoodVisionMauiDemo.ViewModels"
+             x:Class="FoodVisionMauiDemo.Views.DailyLogPage"
+             x:DataType="viewModels:DailyLogViewModel"
+             Title="Daily Log">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+            <Label Text="Daily Log"
+                   FontSize="28"
+                   FontAttributes="Bold" />
+
+            <Label Text="{Binding StatusMessage}"
+                   FontSize="16"
+                   TextColor="Gray" />
+
+            <Button Text="View Insights"
+                    Clicked="OnViewInsightsClicked"
+                    HorizontalOptions="Start" />
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
+                               Color="#2563EB" />
+
+            <Frame BorderColor="#E5E7EB"
+                   BackgroundColor="#F9FAFB"
+                   CornerRadius="8"
+                   Padding="18"
+                   IsVisible="{Binding HasNoMeals}">
+                <Label Text="No meals logged yet. Scan your first food."
+                       FontSize="16"
+                       HorizontalTextAlignment="Center"
+                       TextColor="Gray" />
+            </Frame>
+
+            <VerticalStackLayout Spacing="10"
+                                 IsVisible="{Binding HasTodayMeals}">
+                <Label Text="Today"
+                       FontSize="20"
+                       FontAttributes="Bold" />
+                <CollectionView ItemsSource="{Binding TodayMeals}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:MealLogItem">
+                            <Frame BorderColor="#E5E7EB"
+                                   CornerRadius="8"
+                                   Padding="14"
+                                   Margin="0,0,0,10">
+                                <VerticalStackLayout Spacing="6">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Text="{Binding FoodName}"
+                                               FontSize="18"
+                                               FontAttributes="Bold" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding TimeText}"
+                                               FontSize="14"
+                                               TextColor="Gray" />
+                                    </Grid>
+                                    <Label Text="{Binding MealSummary}"
+                                           FontSize="15" />
+                                    <Label Text="{Binding RiskTagsText}"
+                                           FontSize="14"
+                                           TextColor="#1D4ED8" />
+                                    <Button Text="Delete"
+                                            Clicked="OnDeleteMealClicked"
+                                            BackgroundColor="#FEE2E2"
+                                            TextColor="#991B1B"
+                                            HorizontalOptions="Start" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="10"
+                                 IsVisible="{Binding HasRecentMeals}">
+                <Label Text="Recent"
+                       FontSize="20"
+                       FontAttributes="Bold" />
+                <CollectionView ItemsSource="{Binding RecentMeals}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:MealLogItem">
+                            <Frame BorderColor="#E5E7EB"
+                                   CornerRadius="8"
+                                   Padding="14"
+                                   Margin="0,0,0,10">
+                                <VerticalStackLayout Spacing="6">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Text="{Binding FoodName}"
+                                               FontSize="18"
+                                               FontAttributes="Bold" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding DateTimeText}"
+                                               FontSize="14"
+                                               TextColor="Gray" />
+                                    </Grid>
+                                    <Label Text="{Binding MealSummary}"
+                                           FontSize="15" />
+                                    <Label Text="{Binding RiskTagsText}"
+                                           FontSize="14"
+                                           TextColor="#1D4ED8" />
+                                    <Button Text="Delete"
+                                            Clicked="OnDeleteMealClicked"
+                                            BackgroundColor="#FEE2E2"
+                                            TextColor="#991B1B"
+                                            HorizontalOptions="Start" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:FoodVisionMauiDemo.ViewModels"
+             x:Class="FoodVisionMauiDemo.Views.DashboardPage"
+             x:DataType="viewModels:DashboardViewModel"
+             Title="Dashboard">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="14">
+            <Label Text="{Binding AppName}"
+                   FontSize="30"
+                   FontAttributes="Bold" />
+            <Label Text="{Binding Tagline}"
+                   FontSize="16"
+                   TextColor="Gray" />
+            <Label Text="{Binding CurrentPhaseStatus}"
+                   FontSize="16" />
+            <Label Text="Use the Scan tab to take or select a food image and run local Food-101 recognition."
+                   FontSize="15"
+                   TextColor="Gray" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

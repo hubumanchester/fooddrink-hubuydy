@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:FoodVisionMauiDemo.ViewModels"
+             x:Class="FoodVisionMauiDemo.Views.FoodKnowledgePage"
+             x:DataType="viewModels:FoodKnowledgeViewModel"
+             Title="Food Knowledge">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+            <Label Text="{Binding FoodName}"
+                   FontSize="28"
+                   FontAttributes="Bold" />
+
+            <Label Text="{Binding StatusMessage}"
+                   FontSize="16"
+                   TextColor="Gray" />
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
+                               Color="#2563EB" />
+
+            <Frame BorderColor="#FCA5A5"
+                   BackgroundColor="#FEF2F2"
+                   CornerRadius="8"
+                   Padding="14"
+                   IsVisible="{Binding IsFallback}">
+                <Label Text="{Binding StatusMessage}"
+                       FontSize="15"
+                       TextColor="#991B1B" />
+            </Frame>
+
+            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Cuisine"
+                           FontSize="13"
+                           TextColor="Gray" />
+                    <Label Text="{Binding Cuisine}"
+                           FontSize="18"
+                           FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Nutrition Risk Tags"
+                           FontSize="18"
+                           FontAttributes="Bold" />
+                    <CollectionView ItemsSource="{Binding Tags}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Null}">
+                                <Frame BorderColor="#BFDBFE"
+                                       BackgroundColor="#EFF6FF"
+                                       CornerRadius="8"
+                                       Padding="10,6"
+                                       Margin="0,0,4,4">
+                                    <Label Text="{Binding .}"
+                                           FontSize="14"
+                                           TextColor="#1D4ED8" />
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Possible Allergens"
+                           FontSize="18"
+                           FontAttributes="Bold" />
+                    <CollectionView ItemsSource="{Binding Allergens}"
+                                    IsVisible="{Binding HasAllergens}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Null}">
+                                <Frame BorderColor="#FECACA"
+                                       BackgroundColor="#FEF2F2"
+                                       CornerRadius="8"
+                                       Padding="10,6"
+                                       Margin="0,0,4,4">
+                                    <Label Text="{Binding .}"
+                                           FontSize="14"
+                                           TextColor="#991B1B" />
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Label Text="No common allergens are listed for this item."
+                           FontSize="14"
+                           TextColor="Gray"
+                           IsVisible="{Binding HasNoAllergens}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Common Ingredients"
+                           FontSize="18"
+                           FontAttributes="Bold" />
+                    <CollectionView ItemsSource="{Binding Ingredients}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Null}">
+                                <Label Text="{Binding .}"
+                                       FontSize="15"
+                                       Margin="0,3" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Better Alternatives"
+                           FontSize="18"
+                           FontAttributes="Bold" />
+                    <CollectionView ItemsSource="{Binding Alternatives}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Null}">
+                                <Label Text="{Binding .}"
+                                       FontSize="15"
+                                       Margin="0,3" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Knowledge Graph Explanation"
+                           FontSize="18"
+                           FontAttributes="Bold" />
+                    <Label Text="{Binding Explanation}"
+                           FontSize="15"
+                           LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="Continue to Save Meal"
+                    Command="{Binding ContinueToSaveMealCommand}"
+                    BackgroundColor="#16A34A"
+                    TextColor="White" />
+
+            <Button Text="Back to Scan"
+                    Command="{Binding BackToScanCommand}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:FoodVisionMauiDemo.ViewModels"
+             x:Class="FoodVisionMauiDemo.Views.SettingsPage"
+             x:DataType="viewModels:SettingsViewModel"
+             Title="Settings">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="12">
+            <Label Text="Settings"
+                   FontSize="28"
+                   FontAttributes="Bold" />
+
+            <Frame BorderColor="#E5E7EB"
+                   CornerRadius="8"
+                   Padding="14">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Use Live API"
+                               FontSize="18"
+                               FontAttributes="Bold" />
+                        <Label Text="When off, nearby recommendations will not call the live AMap service."
+                               FontSize="14"
+                               TextColor="Gray"
+                               LineBreakMode="WordWrap" />
+                    </VerticalStackLayout>
+                    <Switch Grid.Column="1"
+                            IsToggled="{Binding UseLiveApi}" />
+                </Grid>
+            </Frame>
+
+            <Label Text="{Binding AmapKeyStatus}"
+                   FontSize="15"
+                   TextColor="Gray" />
+
+            <Label Text="{Binding ModelName}"
+                   FontSize="16" />
+            <Label Text="{Binding ResourceLocation}"
+                   FontSize="16"
+                   TextColor="Gray" />
+            <Label Text="{Binding PlaceholderNote}"
+                   FontSize="15"
+                   TextColor="Gray" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

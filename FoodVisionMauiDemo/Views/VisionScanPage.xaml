@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:FoodVisionMauiDemo.Models"
+             xmlns:viewModels="clr-namespace:FoodVisionMauiDemo.ViewModels"
              x:Class="FoodVisionMauiDemo.Views.VisionScanPage"
+             x:DataType="viewModels:VisionScanViewModel"
              Title="Vision Food Scan">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
+        <VerticalStackLayout Padding="20" Spacing="16">
 
             <Label Text="Vision Food Scan"
                    FontSize="28"
@@ -17,57 +20,78 @@
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center" />
 
-            <!-- Image Preview -->
             <Frame BorderColor="LightGray" CornerRadius="8" Padding="4"
-                   HeightRequest="260" WidthRequest="260"
+                   HeightRequest="270" WidthRequest="270"
                    HorizontalOptions="Center">
-                <Image x:Name="ImagePreview"
-                       Aspect="AspectFit"
-                       HeightRequest="250" WidthRequest="250" />
+                <Grid>
+                    <Image Source="{Binding SelectedImageSource}"
+                           Aspect="AspectFit"
+                           HeightRequest="260" WidthRequest="260" />
+                    <Label Text="No image selected"
+                           IsVisible="{Binding HasNoImage}"
+                           FontSize="14"
+                           TextColor="Gray"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Grid>
             </Frame>
 
-            <!-- Buttons row -->
             <FlexLayout Direction="Row" JustifyContent="Center" Wrap="Wrap">
-                <Button x:Name="BtnTakePhoto"
-                        Text="Take Photo"
-                        Clicked="OnTakePhotoClicked"
+                <Button Text="Take Photo"
+                        Command="{Binding TakePhotoCommand}"
                         Margin="5" />
-                <Button x:Name="BtnPickTestImage"
-                        Text="Pick Test Image"
-                        Clicked="OnPickTestImageClicked"
+                <Button Text="Pick Image"
+                        Command="{Binding PickImageCommand}"
                         Margin="5" />
-                <Button x:Name="BtnAnalyse"
-                        Text="Analyse Food"
-                        Clicked="OnAnalyseFoodClicked"
+                <Button Text="Analyse Food"
+                        Command="{Binding AnalyseFoodCommand}"
                         BackgroundColor="#2563EB"
                         TextColor="White"
                         Margin="5" />
+                <Button Text="Retake Photo"
+                        Command="{Binding RetakePhotoCommand}"
+                        IsVisible="{Binding HasImage}"
+                        Margin="5" />
             </FlexLayout>
 
-            <!-- Loading indicator -->
-            <ActivityIndicator x:Name="LoadingIndicator"
-                               IsVisible="False"
-                               IsRunning="False"
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
                                Color="#2563EB"
                                HorizontalOptions="Center" />
 
-            <!-- Status label -->
-            <Label x:Name="StatusLabel"
+            <Label Text="{Binding StatusMessage}"
                    FontSize="16"
                    FontAttributes="Italic"
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center" />
 
-            <!-- Top-3 Results -->
             <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="12"
-                   IsVisible="False" x:Name="ResultsFrame">
+                   IsVisible="{Binding HasPredictions}">
                 <VerticalStackLayout Spacing="8">
                     <Label Text="Top-3 Predictions"
                            FontSize="18"
                            FontAttributes="Bold" />
-                    <Label x:Name="Result1" FontSize="16" />
-                    <Label x:Name="Result2" FontSize="15" TextColor="Gray" />
-                    <Label x:Name="Result3" FontSize="15" TextColor="Gray" />
+                    <CollectionView ItemsSource="{Binding Predictions}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:FoodPrediction">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      Padding="0,8">
+                                    <Label Text="{Binding RankedDisplayLabel}"
+                                           FontSize="16"
+                                           FontAttributes="Bold" />
+                                    <Label Grid.Column="1"
+                                           Text="{Binding ConfidenceText}"
+                                           FontSize="16"
+                                           TextColor="#2563EB" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Button Text="Confirm Result"
+                            Command="{Binding ConfirmResultCommand}"
+                            BackgroundColor="#16A34A"
+                            TextColor="White"
+                            Margin="0,8,0,0" />
                 </VerticalStackLayout>
             </Frame>
 

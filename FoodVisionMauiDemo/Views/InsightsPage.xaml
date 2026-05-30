@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:FoodVisionMauiDemo.Models"
+             xmlns:viewModels="clr-namespace:FoodVisionMauiDemo.ViewModels"
+             x:Class="FoodVisionMauiDemo.Views.InsightsPage"
+             x:DataType="viewModels:InsightsViewModel"
+             Title="Insights">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+            <Label Text="Insights"
+                   FontSize="28"
+                   FontAttributes="Bold" />
+
+            <Label Text="{Binding StatusMessage}"
+                   FontSize="16"
+                   TextColor="Gray" />
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
+                               Color="#2563EB" />
+
+            <Frame BorderColor="#E5E7EB"
+                   BackgroundColor="#F9FAFB"
+                   CornerRadius="8"
+                   Padding="18"
+                   IsVisible="{Binding HasNoData}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="There is not enough meal data yet. Add more meals to see trends."
+                           FontSize="16"
+                           HorizontalTextAlignment="Center"
+                           TextColor="Gray" />
+                    <Label Text="This page will show dietary balance patterns after meals are saved."
+                           FontSize="14"
+                           HorizontalTextAlignment="Center"
+                           TextColor="Gray" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <VerticalStackLayout Spacing="16"
+                                 IsVisible="{Binding HasData}">
+                <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Today Risk Level"
+                               FontSize="18"
+                               FontAttributes="Bold" />
+                        <Label Text="{Binding TodayRiskLevel}"
+                               FontSize="26"
+                               FontAttributes="Bold" />
+                        <Label Text="Dietary balance indicator only. This is not medical advice."
+                               FontSize="13"
+                               TextColor="Gray" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame BorderColor="#FDE68A"
+                       BackgroundColor="#FFFBEB"
+                       CornerRadius="8"
+                       Padding="14"
+                       IsVisible="{Binding HasLimitedData}">
+                    <Label Text="{Binding DataMessage}"
+                           FontSize="14"
+                           TextColor="#92400E" />
+                </Frame>
+
+                <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Last 7 Days Risk Scores"
+                               FontSize="18"
+                               FontAttributes="Bold" />
+                        <CollectionView ItemsSource="{Binding WeeklyScores}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:RiskTagScore">
+                                    <Grid ColumnDefinitions="*,Auto"
+                                          Padding="0,8">
+                                        <Label Text="{Binding DisplayName}"
+                                               FontSize="16"
+                                               FontAttributes="Bold" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding ScoreText}"
+                                               FontSize="16"
+                                               TextColor="#2563EB" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Risk Reason"
+                               FontSize="18"
+                               FontAttributes="Bold" />
+                        <Label Text="{Binding Reason}"
+                               FontSize="15"
+                               LineBreakMode="WordWrap" />
+                        <Label Text="{Binding DataMessage}"
+                               FontSize="13"
+                               TextColor="Gray" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Alternative Food Suggestions"
+                               FontSize="18"
+                               FontAttributes="Bold" />
+                        <CollectionView ItemsSource="{Binding Recommendations}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:FoodRecommendation">
+                                    <VerticalStackLayout Padding="0,8" Spacing="3">
+                                        <Label Text="{Binding Title}"
+                                               FontSize="16"
+                                               FontAttributes="Bold" />
+                                        <Label Text="{Binding Reason}"
+                                               FontSize="14"
+                                               TextColor="Gray"
+                                               LineBreakMode="WordWrap" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Button Text="Find Nearby Balanced Options"
+                        Command="{Binding FindNearbyCommand}"
+                        BackgroundColor="#16A34A"
+                        TextColor="White" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

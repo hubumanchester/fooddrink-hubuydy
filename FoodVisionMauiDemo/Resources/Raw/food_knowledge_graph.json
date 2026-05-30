@@ -1,0 +1,104 @@
+{
+  "foods": [
+    {
+      "foodKey": "pizza",
+      "displayName": "Pizza",
+      "cuisine": "Italian-American",
+      "tags": ["high_fat", "high_salt", "high_carb"],
+      "allergens": ["gluten", "milk"],
+      "ingredients": ["wheat crust", "cheese", "tomato sauce", "processed meat"],
+      "alternatives": ["thin-crust vegetable pizza", "grilled chicken salad", "wholegrain wrap"],
+      "explanation": "Pizza can be energy dense because refined crust, cheese, and processed toppings often combine high carbohydrate, saturated fat, and sodium. A thinner crust and vegetable toppings can make the meal more balanced."
+    },
+    {
+      "foodKey": "hamburger",
+      "displayName": "Hamburger",
+      "cuisine": "American",
+      "tags": ["high_fat", "high_salt", "high_carb"],
+      "allergens": ["gluten", "sesame", "milk"],
+      "ingredients": ["white bun", "beef patty", "cheese", "sauce", "pickles"],
+      "alternatives": ["grilled chicken burger", "lettuce-wrapped burger", "bean burger with salad"],
+      "explanation": "Hamburgers often contain refined bread, salty sauces, and fatty meat or cheese. Choosing lean protein, extra vegetables, and a smaller portion can reduce dietary risk."
+    },
+    {
+      "foodKey": "ice_cream",
+      "displayName": "Ice Cream",
+      "cuisine": "Dessert",
+      "tags": ["high_sugar", "high_fat"],
+      "allergens": ["milk", "tree nuts"],
+      "ingredients": ["cream", "milk", "sugar", "flavouring"],
+      "alternatives": ["plain yogurt with fruit", "sorbet", "fresh fruit bowl"],
+      "explanation": "Ice cream is commonly high in added sugar and saturated fat. Smaller portions or fruit-based alternatives can help reduce sugar and fat intake."
+    },
+    {
+      "foodKey": "sushi",
+      "displayName": "Sushi",
+      "cuisine": "Japanese",
+      "tags": ["balanced", "high_carb"],
+      "allergens": ["fish", "soy", "sesame"],
+      "ingredients": ["rice", "fish", "seaweed", "soy sauce", "vegetables"],
+      "alternatives": ["sashimi with salad", "brown rice sushi", "low-sodium soy sauce"],
+      "explanation": "Sushi can provide lean protein and seafood nutrients, but white rice and soy sauce can increase carbohydrate and sodium intake. Sashimi or brown rice options can improve balance."
+    },
+    {
+      "foodKey": "ramen",
+      "displayName": "Ramen",
+      "cuisine": "Japanese",
+      "tags": ["high_salt", "high_carb", "high_fat"],
+      "allergens": ["gluten", "soy", "egg"],
+      "ingredients": ["wheat noodles", "broth", "pork", "egg", "soy sauce"],
+      "alternatives": ["vegetable noodle soup", "half-noodle ramen", "clear broth with extra greens"],
+      "explanation": "Ramen broth and noodles can make the meal high in sodium and refined carbohydrates. Reducing broth intake and adding vegetables can lower risk."
+    },
+    {
+      "foodKey": "fried_rice",
+      "displayName": "Fried Rice",
+      "cuisine": "Chinese",
+      "tags": ["high_carb", "high_salt", "high_fat"],
+      "allergens": ["egg", "soy"],
+      "ingredients": ["white rice", "egg", "oil", "soy sauce", "mixed vegetables"],
+      "alternatives": ["steamed rice with vegetables", "brown rice bowl", "cauliflower fried rice"],
+      "explanation": "Fried rice combines refined rice with oil and salty seasonings. More vegetables, less oil, and brown rice can make it a better everyday choice."
+    },
+    {
+      "foodKey": "pancakes",
+      "displayName": "Pancakes",
+      "cuisine": "Breakfast",
+      "tags": ["high_sugar", "high_carb"],
+      "allergens": ["gluten", "egg", "milk"],
+      "ingredients": ["flour", "egg", "milk", "syrup", "butter"],
+      "alternatives": ["oat pancakes", "Greek yogurt with berries", "wholegrain toast with eggs"],
+      "explanation": "Pancakes are often high in refined carbohydrate, especially with syrup or sweet toppings. Wholegrain batter and fruit toppings can improve the meal profile."
+    },
+    {
+      "foodKey": "french_fries",
+      "displayName": "French Fries",
+      "cuisine": "Fast Food",
+      "tags": ["high_fat", "high_salt", "high_carb"],
+      "allergens": [],
+      "ingredients": ["potatoes", "frying oil", "salt"],
+      "alternatives": ["baked potato wedges", "side salad", "steamed vegetables"],
+      "explanation": "French fries are usually fried and salted, making them high in fat, sodium, and fast-digesting carbohydrate. Baked or vegetable sides are more balanced."
+    },
+    {
+      "foodKey": "caesar_salad",
+      "displayName": "Caesar Salad",
+      "cuisine": "Western",
+      "tags": ["balanced", "high_fat", "high_salt"],
+      "allergens": ["fish", "egg", "milk", "gluten"],
+      "ingredients": ["romaine lettuce", "croutons", "parmesan", "caesar dressing", "anchovy"],
+      "alternatives": ["garden salad with vinaigrette", "grilled chicken salad", "dressing on the side"],
+      "explanation": "Caesar salad includes vegetables, but dressing, cheese, and croutons can add fat and sodium. Asking for dressing on the side helps control the risk."
+    },
+    {
+      "foodKey": "grilled_salmon",
+      "displayName": "Grilled Salmon",
+      "cuisine": "Seafood",
+      "tags": ["balanced", "high_protein"],
+      "allergens": ["fish"],
+      "ingredients": ["salmon", "olive oil", "lemon", "herbs", "vegetables"],
+      "alternatives": ["grilled trout", "tofu with vegetables", "skinless chicken with salad"],
+      "explanation": "Grilled salmon is a protein-rich option with beneficial fats. Pairing it with vegetables and whole grains can support a balanced meal."
+    }
+  ]
+}

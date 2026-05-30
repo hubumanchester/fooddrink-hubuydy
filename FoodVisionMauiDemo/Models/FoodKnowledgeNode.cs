@@ -1,0 +1,21 @@
+namespace FoodVisionMauiDemo.Models
+{
+    public class FoodKnowledgeNode
+    {
+        public string FoodKey { get; set; } = string.Empty;
+
+        public string DisplayName { get; set; } = string.Empty;
+
+        public string Cuisine { get; set; } = string.Empty;
+
+        public List<string> Tags { get; set; } = new();
+
+        public List<string> Allergens { get; set; } = new();
+
+        public List<string> Ingredients { get; set; } = new();
+
+        public List<string> Alternatives { get; set; } = new();
+
+        public string Explanation { get; set; } = string.Empty;
+    }
+}

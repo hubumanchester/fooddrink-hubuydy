@@ -6,11 +6,33 @@
     xmlns:local="clr-namespace:FoodVisionMauiDemo"
     xmlns:views="clr-namespace:FoodVisionMauiDemo.Views"
     Shell.FlyoutBehavior="Disabled"
-    Title="FoodVisionMauiDemo">
+    Title="NutriLens KG">
 
-    <ShellContent
-        Title="Vision Scan"
-        ContentTemplate="{DataTemplate views:VisionScanPage}"
-        Route="VisionScanPage" />
+    <TabBar>
+        <ShellContent
+            Title="Dashboard"
+            ContentTemplate="{DataTemplate views:DashboardPage}"
+            Route="DashboardPage" />
+
+        <ShellContent
+            Title="Scan"
+            ContentTemplate="{DataTemplate views:VisionScanPage}"
+            Route="VisionScanPage" />
+
+        <ShellContent
+            Title="Daily Log"
+            ContentTemplate="{DataTemplate views:DailyLogPage}"
+            Route="DailyLogPage" />
+
+        <ShellContent
+            Title="Insights"
+            ContentTemplate="{DataTemplate views:InsightsPage}"
+            Route="InsightsPage" />
+
+        <ShellContent
+            Title="Settings"
+            ContentTemplate="{DataTemplate views:SettingsPage}"
+            Route="SettingsPage" />
+    </TabBar>
 
 </Shell>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:FoodVisionMauiDemo.Models"
+             xmlns:viewModels="clr-namespace:FoodVisionMauiDemo.ViewModels"
+             x:Class="FoodVisionMauiDemo.Views.PredictionConfirmPage"
+             x:DataType="viewModels:PredictionConfirmViewModel"
+             Title="Confirm Food">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+            <Label Text="Confirm Food"
+                   FontSize="28"
+                   FontAttributes="Bold" />
+
+            <Label Text="{Binding StatusMessage}"
+                   FontSize="16"
+                   TextColor="Gray" />
+
+            <Frame BorderColor="#E5E7EB"
+                   CornerRadius="8"
+                   Padding="4"
+                   HeightRequest="160"
+                   WidthRequest="160"
+                   HorizontalOptions="Center"
+                   IsVisible="{Binding HasThumbnail}">
+                <Image Source="{Binding ThumbnailSource}"
+                       Aspect="AspectFit" />
+            </Frame>
+
+            <Frame BorderColor="#E5E7EB"
+                   CornerRadius="8"
+                   Padding="14"
+                   IsVisible="{Binding HasPredictions}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Select the best match"
+                           FontSize="18"
+                           FontAttributes="Bold" />
+                    <CollectionView ItemsSource="{Binding Predictions}"
+                                    SelectedItem="{Binding SelectedPrediction}"
+                                    SelectionMode="Single">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:FoodPrediction">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      Padding="0,10">
+                                    <Label Text="{Binding RankedDisplayLabel}"
+                                           FontSize="16"
+                                           FontAttributes="Bold" />
+                                    <Label Grid.Column="1"
+                                           Text="{Binding ConfidenceText}"
+                                           FontSize="16"
+                                           TextColor="#2563EB" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Button Text="Use Selected Food"
+                            Command="{Binding ConfirmSelectionCommand}"
+                            BackgroundColor="#16A34A"
+                            TextColor="White" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BorderColor="#FCA5A5"
+                   BackgroundColor="#FEF2F2"
+                   CornerRadius="8"
+                   Padding="14"
+                   IsVisible="{Binding HasNoPredictions}">
+                <Label Text="No prediction results were received. Please return to Scan and analyse a food image again."
+                       FontSize="15"
+                       TextColor="#991B1B" />
+            </Frame>
+
+            <Button Text="Back to Scan"
+                    Command="{Binding BackToScanCommand}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

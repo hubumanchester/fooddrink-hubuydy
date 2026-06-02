@@ -5,11 +5,12 @@
 
     <VerticalStackLayout Padding="24" Spacing="12" VerticalOptions="Center">
         <Label Text="NutriLens KG"
-               FontSize="30"
+               FontSize="{DynamicResource TitleFontSize}"
                FontAttributes="Bold"
+               SemanticProperties.HeadingLevel="Level1"
                HorizontalOptions="Center" />
         <Label Text="The app now starts from Shell navigation."
-               FontSize="16"
+               FontSize="{DynamicResource BodyFontSize}"
                TextColor="Gray"
                HorizontalTextAlignment="Center" />
     </VerticalStackLayout>

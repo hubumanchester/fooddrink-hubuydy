@@ -28,5 +28,11 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>NutriLens KG records optional voice notes for saved meals.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>NutriLens KG uses your location to find nearby balanced food options.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>NutriLens KG uses shake gestures to refresh recommendations.</string>
 </dict>
 </plist>

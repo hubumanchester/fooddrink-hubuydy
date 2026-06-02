@@ -6,31 +6,41 @@
     xmlns:local="clr-namespace:FoodVisionMauiDemo"
     xmlns:views="clr-namespace:FoodVisionMauiDemo.Views"
     Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarBackgroundColor="{AppThemeBinding Light={StaticResource SurfaceLowest}, Dark={StaticResource SurfaceDark}}"
+    Shell.TabBarForegroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+    Shell.TabBarTitleColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+    Shell.TabBarUnselectedColor="{AppThemeBinding Light={StaticResource OnSurfaceVariant}, Dark={StaticResource MutedDark}}"
     Title="NutriLens KG">
 
     <TabBar>
         <ShellContent
             Title="Dashboard"
+            Icon="icon_home_teal.svg"
             ContentTemplate="{DataTemplate views:DashboardPage}"
             Route="DashboardPage" />
 
         <ShellContent
             Title="Scan"
+            Icon="icon_scan_teal.svg"
             ContentTemplate="{DataTemplate views:VisionScanPage}"
             Route="VisionScanPage" />
 
         <ShellContent
             Title="Daily Log"
+            Icon="icon_log_teal.svg"
             ContentTemplate="{DataTemplate views:DailyLogPage}"
             Route="DailyLogPage" />
 
         <ShellContent
             Title="Insights"
+            Icon="icon_chart_teal.svg"
             ContentTemplate="{DataTemplate views:InsightsPage}"
             Route="InsightsPage" />
 
         <ShellContent
             Title="Settings"
+            Icon="icon_settings_teal.svg"
             ContentTemplate="{DataTemplate views:SettingsPage}"
             Route="SettingsPage" />
     </TabBar>

@@ -1,27 +1,28 @@
-# Visual Studio / .NET
-.vs/
-.dotnet-home/
+# .NET MAUI
 bin/
 obj/
-**/bin/
-**/obj/
-
-# MAUI / Android build outputs
-*.apk
-*.aab
-*.idsig
-*.keystore
-*.pdb
-FoodDrinkApp_GitHub_Upload.zip
-
-# User-specific files
 *.user
+.vs/
 *.suo
-*.rsuser
+*.cache
+*.dtbcache
+*.binlog
+TestResults/
 
-# OS files
+# OS
+.DS_Store
 Thumbs.db
-Desktop.ini
 
-# Local build redirection output is configured outside the repo:
-# C:\MauiBuild\FoodDrinkApp
+# IDE
+*.sln.DotSettings.user
+.idea/
+
+# Local secrets / API keys
+appsettings.local.json
+*.secrets.json
+*.secret.json
+*.key
+amap.key
+AmapApiKey.cs
+AmapApiOptions.local.cs
+FoodVisionMauiDemo/Services/AmapApiOptions.local.cs

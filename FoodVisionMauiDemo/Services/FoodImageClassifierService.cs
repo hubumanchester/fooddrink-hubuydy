@@ -3,6 +3,8 @@ using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using SkiaSharp;
 using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace FoodVisionMauiDemo.Services
 {
@@ -33,6 +35,7 @@ namespace FoodVisionMauiDemo.Services
 
                 try
                 {
+                    EnsureOnnxRuntimeNativeLibraryLoaded();
                     _session = new InferenceSession(modelBytes);
                 }
                 catch (Exception ex)
@@ -174,6 +177,13 @@ namespace FoodVisionMauiDemo.Services
             }
         }
 
+        private static void EnsureOnnxRuntimeNativeLibraryLoaded()
+        {
+#if ANDROID
+            OnnxRuntimeNativeLoader.EnsureLoaded();
+#endif
+        }
+
         private DenseTensor<float> PreprocessImage(byte[] imageBytes)
         {
             using var original = SKBitmap.Decode(imageBytes);
@@ -298,4 +308,60 @@ namespace FoodVisionMauiDemo.Services
             _initialized = false;
         }
     }
+
+#if ANDROID
+    internal static class OnnxRuntimeNativeLoader
+    {
+        private static readonly object SyncRoot = new();
+        private static bool _resolverRegistered;
+        private static IntPtr _onnxRuntimeHandle;
+
+        public static void EnsureLoaded()
+        {
+            lock (SyncRoot)
+            {
+                if (_resolverRegistered)
+                    return;
+
+                var nativeLibraryDirectory = Android.App.Application.Context?.ApplicationInfo?.NativeLibraryDir;
+                if (string.IsNullOrWhiteSpace(nativeLibraryDirectory))
+                    throw new FoodImageClassifierException("The food recognition engine is unavailable on this device.");
+
+                var onnxRuntimePath = Path.Combine(nativeLibraryDirectory, "libonnxruntime.so");
+                if (!File.Exists(onnxRuntimePath))
+                    throw new FoodImageClassifierException("The food recognition engine is missing from the app package.");
+
+                try
+                {
+                    Java.Lang.JavaSystem.LoadLibrary("onnxruntime");
+                    NativeLibrary.TryLoad("libonnxruntime.so", out _onnxRuntimeHandle);
+                    NativeLibrary.SetDllImportResolver(typeof(InferenceSession).Assembly, ResolveOnnxRuntimeImport);
+                    _resolverRegistered = true;
+                    Debug.WriteLine($"[FoodImageClassifier] Loaded ONNX Runtime native library from {onnxRuntimePath}");
+                }
+                catch (InvalidOperationException)
+                {
+                    _resolverRegistered = true;
+                    Debug.WriteLine("[FoodImageClassifier] ONNX Runtime DllImport resolver was already registered.");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    throw new FoodImageClassifierException("The food recognition engine could not start on this device.", ex);
+                }
+            }
+        }
+
+        private static IntPtr ResolveOnnxRuntimeImport(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
+        {
+            if (libraryName.Equals("onnxruntime", StringComparison.OrdinalIgnoreCase) ||
+                libraryName.Equals("libonnxruntime.so", StringComparison.OrdinalIgnoreCase))
+            {
+                return _onnxRuntimeHandle;
+            }
+
+            return IntPtr.Zero;
+        }
+    }
+#endif
 }

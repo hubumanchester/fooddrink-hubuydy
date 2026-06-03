@@ -3,6 +3,7 @@ using System.Diagnostics;
 using FoodVisionMauiDemo.Models;
 using FoodVisionMauiDemo.Repositories;
 using FoodVisionMauiDemo.Services;
+using Microsoft.Maui.ApplicationModel;
 
 namespace FoodVisionMauiDemo.ViewModels
 {
@@ -10,8 +11,14 @@ namespace FoodVisionMauiDemo.ViewModels
     {
         private readonly MealLogRepository _mealLogRepository;
         private readonly ImageStorageService _imageStorageService;
+        private readonly VoiceNoteService _voiceNoteService;
+        private readonly VoiceNotePlaybackService _voiceNotePlaybackService;
+        private readonly FeedbackService _feedbackService;
+        private readonly AppSettingsService _settingsService;
         private readonly List<FoodPrediction> _predictions = new();
+        private IDispatcherTimer? _recordingTimer;
         private FoodKnowledgeNode? _knowledgeNode;
+        private VoiceNoteInfo? _voiceNoteInfo;
         private string _foodLabel = string.Empty;
         private string _foodName = "Save Meal";
         private string _imagePath = string.Empty;
@@ -19,20 +26,54 @@ namespace FoodVisionMauiDemo.ViewModels
         private string? _selectedPortion;
         private string _notes = string.Empty;
         private string _statusMessage = "Choose meal details before saving.";
+        private string _voiceNoteStatus = "No voice note recorded.";
+        private string _recordingDurationText = "00:00";
         private bool _isBusy;
+        private bool _isRecording;
+        private bool _isPlayingVoiceNote;
+        private bool _hasValidationError;
         private bool _isKnowledgeFallback;
         private ImageSource? _imageSource;
 
         public SaveMealViewModel()
-            : this(new MealLogRepository(), new ImageStorageService())
+            : this(
+                new MealLogRepository(),
+                new ImageStorageService(),
+                new VoiceNoteService(),
+                new VoiceNotePlaybackService(),
+                new FeedbackService(),
+                new AppSettingsService())
         {
         }
 
-        public SaveMealViewModel(MealLogRepository mealLogRepository, ImageStorageService imageStorageService)
+        public SaveMealViewModel(
+            MealLogRepository mealLogRepository,
+            ImageStorageService imageStorageService,
+            VoiceNoteService voiceNoteService,
+            VoiceNotePlaybackService voiceNotePlaybackService,
+            FeedbackService feedbackService,
+            AppSettingsService settingsService)
         {
             _mealLogRepository = mealLogRepository;
             _imageStorageService = imageStorageService;
-            SaveMealCommand = new Command(async () => await SaveMealAsync(), () => !IsBusy);
+            _voiceNoteService = voiceNoteService;
+            _voiceNotePlaybackService = voiceNotePlaybackService;
+            _feedbackService = feedbackService;
+            _settingsService = settingsService;
+            SaveMealCommand = new Command(async () => await SaveMealAsync(), () => !IsBusy && !IsRecording);
+            ToggleVoiceRecordingCommand = new Command(async () => await ToggleVoiceRecordingAsync(), () => !IsBusy);
+            ToggleVoicePlaybackCommand = new Command(async () => await ToggleVoicePlaybackAsync(), () => !IsBusy && !IsRecording && HasVoiceNote);
+            _voiceNotePlaybackService.PlaybackCompleted += OnVoicePlaybackCompleted;
+
+            _recordingTimer = Application.Current?.Dispatcher.CreateTimer();
+            if (_recordingTimer != null)
+            {
+                _recordingTimer.Interval = TimeSpan.FromSeconds(1);
+                _recordingTimer.Tick += (_, _) =>
+                {
+                    RecordingDurationText = _voiceNoteService.Elapsed.ToString(@"mm\:ss");
+                };
+            }
         }
 
         public IReadOnlyList<string> MealTypes { get; } = new[] { "Breakfast", "Lunch", "Dinner", "Snack" };
@@ -46,6 +87,10 @@ namespace FoodVisionMauiDemo.ViewModels
         public ObservableCollection<string> Alternatives { get; } = new();
 
         public Command SaveMealCommand { get; }
+
+        public Command ToggleVoiceRecordingCommand { get; }
+
+        public Command ToggleVoicePlaybackCommand { get; }
 
         public string FoodName
         {
@@ -66,13 +111,21 @@ namespace FoodVisionMauiDemo.ViewModels
         public string? SelectedMealType
         {
             get => _selectedMealType;
-            set => SetProperty(ref _selectedMealType, value);
+            set
+            {
+                if (SetProperty(ref _selectedMealType, value))
+                    ClearValidationErrorIfReady();
+            }
         }
 
         public string? SelectedPortion
         {
             get => _selectedPortion;
-            set => SetProperty(ref _selectedPortion, value);
+            set
+            {
+                if (SetProperty(ref _selectedPortion, value))
+                    ClearValidationErrorIfReady();
+            }
         }
 
         public string Notes
@@ -87,13 +140,49 @@ namespace FoodVisionMauiDemo.ViewModels
             private set => SetProperty(ref _statusMessage, value);
         }
 
+        public bool HasValidationError
+        {
+            get => _hasValidationError;
+            private set => SetProperty(ref _hasValidationError, value);
+        }
+
         public bool IsBusy
         {
             get => _isBusy;
             private set
             {
                 if (SetProperty(ref _isBusy, value))
+                {
                     SaveMealCommand.ChangeCanExecute();
+                    ToggleVoiceRecordingCommand.ChangeCanExecute();
+                    ToggleVoicePlaybackCommand.ChangeCanExecute();
+                }
+            }
+        }
+
+        public bool IsRecording
+        {
+            get => _isRecording;
+            private set
+            {
+                if (SetProperty(ref _isRecording, value))
+                {
+                    OnPropertyChanged(nameof(VoiceRecordButtonText));
+                    OnPropertyChanged(nameof(RecordingLabel));
+                    SaveMealCommand.ChangeCanExecute();
+                    ToggleVoiceRecordingCommand.ChangeCanExecute();
+                    ToggleVoicePlaybackCommand.ChangeCanExecute();
+                }
+            }
+        }
+
+        public bool IsPlayingVoiceNote
+        {
+            get => _isPlayingVoiceNote;
+            private set
+            {
+                if (SetProperty(ref _isPlayingVoiceNote, value))
+                    OnPropertyChanged(nameof(VoicePlaybackButtonText));
             }
         }
 
@@ -111,13 +200,38 @@ namespace FoodVisionMauiDemo.ViewModels
             private set => SetProperty(ref _isKnowledgeFallback, value);
         }
 
-        public string VoiceNotePlaceholder => "Voice note placeholder - microphone capture will be added in a later phase.";
+        public string VoiceNoteStatus
+        {
+            get => _voiceNoteStatus;
+            private set => SetProperty(ref _voiceNoteStatus, value);
+        }
+
+        public string RecordingDurationText
+        {
+            get => _recordingDurationText;
+            private set => SetProperty(ref _recordingDurationText, value);
+        }
+
+        public bool HasVoiceNote => _voiceNoteInfo != null;
+
+        public string VoiceRecordButtonText => IsRecording ? "Stop Recording Voice Note" : "Record Voice Note";
+
+        public string VoicePlaybackButtonText => IsPlayingVoiceNote ? "Stop Voice Note" : "Play Voice Note";
+
+        public string RecordingLabel => IsRecording ? $"Recording... {RecordingDurationText}" : RecordingDurationText;
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             SelectedMealType = null;
             SelectedPortion = null;
             Notes = string.Empty;
+            _voiceNoteInfo = null;
+            StopVoicePlaybackIfNeeded("No voice note recorded.");
+            VoiceNoteStatus = "No voice note recorded.";
+            RecordingDurationText = "00:00";
+            IsRecording = false;
+            OnPropertyChanged(nameof(HasVoiceNote));
+            ToggleVoicePlaybackCommand.ChangeCanExecute();
 
             _foodLabel = query.TryGetValue("FoodLabel", out var labelValue) && labelValue is string label
                 ? label
@@ -156,33 +270,47 @@ namespace FoodVisionMauiDemo.ViewModels
             ReplaceCollection(Alternatives, _knowledgeNode.Alternatives);
             NotifyListStates();
 
-            StatusMessage = "Choose meal details before saving.";
+            SetStatus("Choose meal details before saving.", false);
         }
 
         private async Task SaveMealAsync()
         {
             if (string.IsNullOrWhiteSpace(SelectedMealType))
             {
-                StatusMessage = "Please choose a meal type before saving.";
+                SetStatus("Please choose a meal type before saving.", true);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(SelectedPortion))
             {
-                StatusMessage = "Please choose a portion size before saving.";
+                SetStatus("Please choose a portion size before saving.", true);
                 return;
             }
 
             if (_knowledgeNode == null)
             {
-                StatusMessage = "Food knowledge is missing. Please go back and try again.";
+                SetStatus("Food knowledge is missing. Please go back and try again.", true);
+                return;
+            }
+
+            if (IsRecording)
+            {
+                SetStatus("Please stop recording before saving this meal.", true);
+                return;
+            }
+
+            StopVoicePlaybackIfNeeded("Voice note ready.");
+
+            if (!_settingsService.SaveScanHistory)
+            {
+                SetStatus("Scan history saving is disabled in Settings.", true);
                 return;
             }
 
             try
             {
                 IsBusy = true;
-                StatusMessage = "Saving meal...";
+                SetStatus("Saving meal...", false);
 
                 var permanentImagePath = await _imageStorageService.EnsureImageInAppDataAsync(_imagePath);
 
@@ -194,7 +322,9 @@ namespace FoodVisionMauiDemo.ViewModels
                     ImagePath = permanentImagePath,
                     MealType = SelectedMealType,
                     Portion = SelectedPortion,
-                    Notes = Notes?.Trim() ?? string.Empty
+                    Notes = Notes?.Trim() ?? string.Empty,
+                    VoiceNotePath = _voiceNoteInfo?.FilePath ?? string.Empty,
+                    VoiceNoteSizeBytes = _voiceNoteInfo?.FileSizeBytes ?? 0
                 };
 
                 var predictionResults = _predictions
@@ -205,19 +335,143 @@ namespace FoodVisionMauiDemo.ViewModels
                 var snapshot = FoodNodeSnapshot.FromKnowledgeNode(_knowledgeNode, IsKnowledgeFallback);
 
                 await _mealLogRepository.SaveMealAsync(record, predictionResults, snapshot);
+                await _feedbackService.SuccessAsync();
 
-                StatusMessage = "Meal saved.";
+                SetStatus("Meal saved.", false);
                 await Shell.Current.GoToAsync("//DailyLogPage");
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
-                StatusMessage = "Could not save this meal. Please try again.";
+                SetStatus("Could not save this meal. Please try again.", true);
             }
             finally
             {
                 IsBusy = false;
             }
+        }
+
+        private async Task ToggleVoiceRecordingAsync()
+        {
+            if (IsRecording)
+            {
+                await StopVoiceRecordingAsync();
+                return;
+            }
+
+            await StartVoiceRecordingAsync();
+        }
+
+        private async Task StartVoiceRecordingAsync()
+        {
+            try
+            {
+                StopVoicePlaybackIfNeeded("Starting a new voice note...");
+                await _voiceNoteService.StartRecordingAsync();
+                IsRecording = true;
+                RecordingDurationText = "00:00";
+                VoiceNoteStatus = "Recording...";
+                _recordingTimer?.Start();
+            }
+            catch (VoiceNoteException ex)
+            {
+                VoiceNoteStatus = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                VoiceNoteStatus = "Could not start voice recording. Please try again.";
+            }
+        }
+
+        private async Task StopVoiceRecordingAsync()
+        {
+            try
+            {
+                _recordingTimer?.Stop();
+                _voiceNoteInfo = await _voiceNoteService.StopRecordingAsync();
+                IsRecording = false;
+                RecordingDurationText = _voiceNoteInfo.DurationText;
+                VoiceNoteStatus = $"Voice note saved. File size: {_voiceNoteInfo.FileSizeText}.";
+                OnPropertyChanged(nameof(HasVoiceNote));
+                ToggleVoicePlaybackCommand.ChangeCanExecute();
+            }
+            catch (VoiceNoteException ex)
+            {
+                _recordingTimer?.Stop();
+                IsRecording = false;
+                VoiceNoteStatus = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                _recordingTimer?.Stop();
+                IsRecording = false;
+                VoiceNoteStatus = "Could not save the voice note. Please try again.";
+            }
+        }
+
+        public async Task StopRecordingIfNeededAsync()
+        {
+            StopVoicePlaybackIfNeeded();
+
+            if (!IsRecording)
+                return;
+
+            await StopVoiceRecordingAsync();
+        }
+
+        private async Task ToggleVoicePlaybackAsync()
+        {
+            if (_voiceNoteInfo == null || string.IsNullOrWhiteSpace(_voiceNoteInfo.FilePath))
+            {
+                VoiceNoteStatus = "Record a voice note before playing it.";
+                return;
+            }
+
+            if (IsPlayingVoiceNote)
+            {
+                StopVoicePlaybackIfNeeded("Voice note playback stopped.");
+                return;
+            }
+
+            try
+            {
+                await _voiceNotePlaybackService.PlayAsync(_voiceNoteInfo.FilePath);
+                IsPlayingVoiceNote = true;
+                VoiceNoteStatus = "Playing voice note...";
+            }
+            catch (VoiceNotePlaybackException ex)
+            {
+                IsPlayingVoiceNote = false;
+                VoiceNoteStatus = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                IsPlayingVoiceNote = false;
+                VoiceNoteStatus = "Could not play this voice note.";
+            }
+        }
+
+        private void StopVoicePlaybackIfNeeded(string? statusMessage = null)
+        {
+            if (IsPlayingVoiceNote || _voiceNotePlaybackService.IsPlaying)
+                _voiceNotePlaybackService.Stop();
+
+            IsPlayingVoiceNote = false;
+
+            if (!string.IsNullOrWhiteSpace(statusMessage))
+                VoiceNoteStatus = statusMessage;
+        }
+
+        private void OnVoicePlaybackCompleted(object? sender, string filePath)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                IsPlayingVoiceNote = false;
+                VoiceNoteStatus = "Voice note playback finished.";
+            });
         }
 
         private FoodKnowledgeNode CreateFallbackNode()
@@ -247,6 +501,24 @@ namespace FoodVisionMauiDemo.ViewModels
             OnPropertyChanged(nameof(HasAllergens));
             OnPropertyChanged(nameof(HasNoAllergens));
             OnPropertyChanged(nameof(HasAlternatives));
+        }
+
+        private void SetStatus(string message, bool isValidationError)
+        {
+            StatusMessage = message;
+            HasValidationError = isValidationError;
+        }
+
+        private void ClearValidationErrorIfReady()
+        {
+            if (!HasValidationError)
+                return;
+
+            if (!string.IsNullOrWhiteSpace(SelectedMealType) &&
+                !string.IsNullOrWhiteSpace(SelectedPortion))
+            {
+                SetStatus("Meal details are ready to save.", false);
+            }
         }
 
         private static string ToDisplayText(string value)

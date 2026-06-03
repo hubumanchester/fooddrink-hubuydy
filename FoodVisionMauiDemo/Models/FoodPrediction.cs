@@ -14,5 +14,7 @@ namespace FoodVisionMauiDemo.Models
         public string RankedDisplayLabel => Rank > 0 ? $"{Rank}. {DisplayLabel}" : DisplayLabel;
 
         public string DisplayText => $"{DisplayLabel} - {ConfidenceText}";
+
+        public bool IsLowConfidence => Confidence > 0 && Confidence < 0.5f;
     }
 }

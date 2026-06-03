@@ -16,6 +16,18 @@ namespace FoodVisionMauiDemo.Views
         {
             base.OnAppearing();
             await ViewModel.LoadAsync();
+            ViewModel.StartShakeListening();
+        }
+
+        protected override void OnDisappearing()
+        {
+            ViewModel.StopShakeListening();
+            base.OnDisappearing();
+        }
+
+        private async void OnScanFirstFoodClicked(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync("//VisionScanPage");
         }
     }
 }

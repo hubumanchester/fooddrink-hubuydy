@@ -27,6 +27,7 @@ namespace FoodVisionMauiDemo.Services
             int radius = 3000,
             int offset = 10,
             int page = 1,
+            bool allowBroadFallback = true,
             CancellationToken cancellationToken = default)
         {
             if (!AmapApiOptions.HasConfiguredApiKey)
@@ -34,12 +35,40 @@ namespace FoodVisionMauiDemo.Services
 
             var longitude = location.Longitude.ToString(CultureInfo.InvariantCulture);
             var latitude = location.Latitude.ToString(CultureInfo.InvariantCulture);
-            var requestUri = BuildRequestUri(longitude, latitude, keywords, radius, offset, page);
+            foreach (var candidate in BuildSearchCandidates(keywords, radius, allowBroadFallback))
+            {
+                var requestUri = BuildRequestUri(
+                    longitude,
+                    latitude,
+                    candidate.Keywords,
+                    candidate.Radius,
+                    offset,
+                    page,
+                    candidate.Types);
 
-            AmapAroundSearchResponse? response;
+                var response = await GetResponseAsync(requestUri, cancellationToken);
+                EnsureSuccessfulResponse(response);
+
+                var places = MapPlaces(response, recommendationReason);
+                if (places.Count > 0)
+                    return places;
+
+                Debug.WriteLine($"[AmapPlaceSearch] No POIs for keywords={candidate.Keywords}, types={candidate.Types}, radius={candidate.Radius}, count={response.Count}");
+            }
+
+            throw new NearbySearchException("No nearby places found for this recommendation.");
+        }
+
+        private async Task<AmapAroundSearchResponse> GetResponseAsync(Uri requestUri, CancellationToken cancellationToken)
+        {
             try
             {
-                response = await _httpClient.GetFromJsonAsync<AmapAroundSearchResponse>(requestUri, cancellationToken);
+                var response = await _httpClient.GetFromJsonAsync<AmapAroundSearchResponse>(requestUri, cancellationToken);
+                return response ?? throw new NearbySearchException("Could not connect to the live nearby search service.");
+            }
+            catch (NearbySearchException)
+            {
+                throw;
             }
             catch (TaskCanceledException ex)
             {
@@ -56,20 +85,26 @@ namespace FoodVisionMauiDemo.Services
                 Debug.WriteLine(ex);
                 throw new NearbySearchException("Could not connect to the live nearby search service.", ex);
             }
+        }
 
-            if (response == null)
-                throw new NearbySearchException("Could not connect to the live nearby search service.");
+        private static void EnsureSuccessfulResponse(AmapAroundSearchResponse response)
+        {
+            if (response.Status != "0")
+                return;
 
-            if (response.Status == "0")
-            {
-                var message = IsApiConfigurationError(response.InfoCode)
-                    ? "Nearby search is unavailable due to API configuration."
-                    : $"Live nearby search failed: {CleanApiInfo(response.Info)}";
+            Debug.WriteLine($"[AmapPlaceSearch] status=0, infocode={response.InfoCode}, info={response.Info}");
+            var message = IsApiConfigurationError(response.InfoCode)
+                ? "Nearby search is unavailable due to API configuration."
+                : "The live nearby search service returned an error. Please try again later.";
 
-                throw new NearbySearchException(message);
-            }
+            throw new NearbySearchException(message);
+        }
 
-            var places = response.Pois
+        private static IReadOnlyList<NearbyPlace> MapPlaces(
+            AmapAroundSearchResponse response,
+            string recommendationReason)
+        {
+            return response.Pois
                 .Where(poi => !string.IsNullOrWhiteSpace(poi.Name))
                 .Select(poi => new NearbyPlace
                 {
@@ -83,11 +118,19 @@ namespace FoodVisionMauiDemo.Services
                 })
                 .OrderBy(place => place.DistanceMeters ?? int.MaxValue)
                 .ToList();
+        }
 
-            if (places.Count == 0)
-                throw new NearbySearchException("No nearby places found for this recommendation.");
+        private static IEnumerable<SearchCandidate> BuildSearchCandidates(
+            string keywords,
+            int radius,
+            bool allowBroadFallback)
+        {
+            yield return new SearchCandidate(keywords, radius, string.Empty);
+            yield return new SearchCandidate(keywords, 8000, string.Empty);
+            yield return new SearchCandidate($"{keywords}|餐厅|美食", 10000, "050000");
 
-            return places;
+            if (allowBroadFallback)
+                yield return new SearchCandidate("餐饮服务|餐厅|美食", 15000, "050000");
         }
 
         private static Uri BuildRequestUri(
@@ -96,7 +139,8 @@ namespace FoodVisionMauiDemo.Services
             string keywords,
             int radius,
             int offset,
-            int page)
+            int page,
+            string types)
         {
             var query = new Dictionary<string, string>
             {
@@ -110,6 +154,9 @@ namespace FoodVisionMauiDemo.Services
                 ["output"] = "JSON"
             };
 
+            if (!string.IsNullOrWhiteSpace(types))
+                query["types"] = types;
+
             var queryString = string.Join("&", query.Select(pair =>
                 $"{Uri.EscapeDataString(pair.Key)}={Uri.EscapeDataString(pair.Value)}"));
 
@@ -121,16 +168,13 @@ namespace FoodVisionMauiDemo.Services
             return infoCode is "10001" or "10002" or "10003" or "10007" or "10008" or "10009";
         }
 
-        private static string CleanApiInfo(string info)
-        {
-            return string.IsNullOrWhiteSpace(info) ? "The live service returned an error." : info;
-        }
-
         private static string NormalizeAddress(string address)
         {
             return string.IsNullOrWhiteSpace(address) || address == "[]"
                 ? "Address unavailable"
                 : address;
         }
+
+        private readonly record struct SearchCandidate(string Keywords, int Radius, string Types);
     }
 }

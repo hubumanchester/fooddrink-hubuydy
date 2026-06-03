@@ -7,86 +7,202 @@
              x:DataType="viewModels:NearbyFoodViewModel"
              Title="Nearby Food">
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="16">
-            <Label Text="Nearby Food"
-                   FontSize="28"
-                   FontAttributes="Bold" />
-
-            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Current Risk Focus"
-                           FontSize="13"
-                           TextColor="Gray" />
-                    <Label Text="{Binding RiskDisplayName}"
-                           FontSize="22"
-                           FontAttributes="Bold" />
-                    <Label Text="{Binding SearchKeywords}"
-                           FontSize="15"
-                           TextColor="#2563EB" />
+        <VerticalStackLayout Padding="24,32,24,40" Spacing="20">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Live nearby"
+                           Style="{StaticResource EyebrowLabel}" />
+                    <Label Text="Nearby Food"
+                           Style="{StaticResource Headline}"
+                           SemanticProperties.HeadingLevel="Level1" />
+                    <Label Text="Find balanced places around your real location using the AMap Web Service."
+                           Style="{StaticResource BodyMutedLabel}" />
                 </VerticalStackLayout>
-            </Frame>
+                <Border x:Name="NearbyShakeCounterCard"
+                        Grid.Column="1"
+                        Style="{StaticResource CardFrame}"
+                        Padding="14,9"
+                        VerticalOptions="Center">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="SHAKE"
+                               Style="{StaticResource EyebrowLabel}"
+                               TextColor="{StaticResource Primary}" />
+                        <Label Text="{Binding ShakeRefreshCount}"
+                               Style="{StaticResource SubHeadline}"
+                               TextColor="{StaticResource Primary}"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Border x:Name="NearbyShakeFeedbackBanner"
+                    Style="{StaticResource TintCardFrame}"
+                    Padding="14"
+                    IsVisible="{Binding IsShakeFeedbackVisible}"
+                    Opacity="0"
+                    Scale="0.98"
+                    SemanticProperties.Description="{Binding ShakeFeedbackMessage}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Border StrokeThickness="0"
+                            StrokeShape="RoundRectangle 20"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}">
+                        <Image Source="icon_refresh_white.svg"
+                               WidthRequest="20"
+                               HeightRequest="20"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="SHAKE REFRESH"
+                               Style="{StaticResource EyebrowLabel}"
+                               TextColor="{StaticResource Primary}" />
+                        <Label Text="{Binding ShakeFeedbackMessage}"
+                               Style="{StaticResource MutedLabel}"
+                               LineBreakMode="WordWrap" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <Border x:Name="NearbyHeroCard"
+                    Style="{StaticResource HeroCard}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Recommendation focus"
+                           Style="{StaticResource EyebrowLabel}"
+                           TextColor="#A7F3D0" />
+                    <Label Text="{Binding RiskDisplayName}"
+                           Style="{StaticResource SubHeadline}"
+                           TextColor="{StaticResource White}" />
+                    <Label Text="{Binding SearchKeywords}"
+                           TextColor="#DDF7EF" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource CardFrame}"
+                    SemanticProperties.Description="Custom nearby place search controls.">
+                <VerticalStackLayout Spacing="14">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Search keyword"
+                                   Style="{StaticResource SubHeadline}" />
+                            <Label Text="Use the recommended search or type your own place keyword."
+                                   Style="{StaticResource MutedLabel}"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                        <Border Grid.Column="1"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="10,6"
+                                BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#123D34}"
+                                VerticalOptions="Start">
+                            <Label Text="{Binding SearchModeLabel}"
+                                   Style="{StaticResource MutedLabel}"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        </Border>
+                    </Grid>
+
+                    <Border Style="{StaticResource InputBorder}">
+                        <Entry Placeholder="e.g. salad, sushi, hotpot, coffee"
+                               Text="{Binding CustomKeywords}"
+                               ReturnType="Search"
+                               ReturnCommand="{Binding SearchCustomPlacesCommand}"
+                               SemanticProperties.Description="Enter a custom keyword for live nearby search." />
+                    </Border>
+
+                    <Border x:Name="NearbySearchSummaryCard"
+                            Style="{StaticResource TintCardFrame}"
+                            Padding="14">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Current search"
+                                   Style="{StaticResource EyebrowLabel}" />
+                            <Label Text="{Binding ActiveSearchKeywords}"
+                                   LineBreakMode="WordWrap" />
+                            <Label Text="{Binding ShakeStatusMessage}"
+                                   Style="{StaticResource MutedLabel}"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Button Text="Search"
+                                ImageSource="icon_refresh_white.svg"
+                                ContentLayout="Left,10"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding SearchCustomPlacesCommand}"
+                                SemanticProperties.Description="Search nearby places using the custom keyword." />
+                        <Button Grid.Column="1"
+                                Text="Use Suggested"
+                                Style="{StaticResource SecondaryButton}"
+                                Command="{Binding UseRecommendedKeywordsCommand}"
+                                SemanticProperties.Description="Clear the custom keyword and search using the suggested recommendation." />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
 
             <Label Text="{Binding StatusMessage}"
-                   FontSize="16"
-                   TextColor="Gray" />
+                   Style="{StaticResource MutedLabel}" />
 
             <ActivityIndicator IsVisible="{Binding IsBusy}"
                                IsRunning="{Binding IsBusy}"
-                               Color="#2563EB" />
+                               HorizontalOptions="Center" />
 
-            <Frame BorderColor="#FCA5A5"
-                   BackgroundColor="#FEF2F2"
-                   CornerRadius="8"
-                   Padding="14"
+            <Border Style="{StaticResource ErrorFrame}"
                    IsVisible="{Binding HasError}">
                 <Label Text="{Binding StatusMessage}"
-                       FontSize="15"
-                       TextColor="#991B1B"
+                       TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerSoft}}"
                        LineBreakMode="WordWrap" />
-            </Frame>
+            </Border>
 
             <CollectionView ItemsSource="{Binding Places}"
                             IsVisible="{Binding HasPlaces}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:NearbyPlace">
-                        <Frame BorderColor="#E5E7EB"
-                               CornerRadius="8"
-                               Padding="14"
+                        <Border Style="{StaticResource CardFrame}"
                                Margin="0,0,0,10">
-                            <VerticalStackLayout Spacing="6">
-                                <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <Border StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 12"
+                                            WidthRequest="32"
+                                            HeightRequest="32"
+                                            BackgroundColor="{AppThemeBinding Light=#D1FAE5, Dark=#123D34}"
+                                            VerticalOptions="Center">
+                                        <Label Text="•"
+                                               FontSize="22"
+                                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                               HorizontalTextAlignment="Center"
+                                               VerticalTextAlignment="Center" />
+                                    </Border>
                                     <Label Text="{Binding Name}"
-                                           FontSize="18"
-                                           FontAttributes="Bold" />
-                                    <Label Grid.Column="1"
+                                           Grid.Column="1"
+                                           Style="{StaticResource SubHeadline}" />
+                                    <Label Grid.Column="2"
                                            Text="{Binding DistanceText}"
-                                           FontSize="14"
-                                           TextColor="#2563EB" />
+                                           Style="{StaticResource EyebrowLabel}" />
                                 </Grid>
                                 <Label Text="{Binding Type}"
-                                       FontSize="14"
-                                       TextColor="Gray"
+                                       Style="{StaticResource MutedLabel}"
                                        LineBreakMode="WordWrap" />
                                 <Label Text="{Binding Address}"
-                                       FontSize="15"
                                        LineBreakMode="WordWrap" />
                                 <Label Text="{Binding TelText}"
-                                       FontSize="14"
-                                       TextColor="Gray" />
+                                       Style="{StaticResource MutedLabel}" />
                                 <Label Text="{Binding RecommendationReason}"
-                                       FontSize="14"
-                                       TextColor="#16A34A"
+                                       Style="{StaticResource EyebrowLabel}"
                                        LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
             <Button Text="Refresh Places"
+                    ImageSource="icon_refresh_white.svg"
+                    ContentLayout="Left,10"
+                    Style="{StaticResource PrimaryButton}"
                     Command="{Binding RefreshPlacesCommand}"
-                    BackgroundColor="#2563EB"
-                    TextColor="White" />
+                    SemanticProperties.Description="Refresh live nearby food place recommendations." />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

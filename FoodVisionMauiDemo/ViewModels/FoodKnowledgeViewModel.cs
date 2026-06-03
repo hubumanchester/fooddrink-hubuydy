@@ -9,6 +9,7 @@ namespace FoodVisionMauiDemo.ViewModels
     public class FoodKnowledgeViewModel : BaseViewModel
     {
         private readonly KnowledgeGraphService _knowledgeGraphService;
+        private readonly SpeechService _speechService;
         private string? _foodLabel;
         private string _imagePath = string.Empty;
         private List<FoodPrediction> _predictions = new();
@@ -22,15 +23,17 @@ namespace FoodVisionMauiDemo.ViewModels
         private bool _hasLoaded;
 
         public FoodKnowledgeViewModel()
-            : this(new KnowledgeGraphService())
+            : this(new KnowledgeGraphService(), new SpeechService())
         {
         }
 
-        public FoodKnowledgeViewModel(KnowledgeGraphService knowledgeGraphService)
+        public FoodKnowledgeViewModel(KnowledgeGraphService knowledgeGraphService, SpeechService speechService)
         {
             _knowledgeGraphService = knowledgeGraphService;
+            _speechService = speechService;
             ContinueToSaveMealCommand = new Command(async () => await ContinueToSaveMealAsync(), () => !IsBusy);
             BackToScanCommand = new Command(async () => await Shell.Current.GoToAsync("//VisionScanPage"));
+            ReadExplanationCommand = new Command(async () => await ReadExplanationAsync(), () => !IsBusy);
         }
 
         public ObservableCollection<string> Tags { get; } = new();
@@ -41,9 +44,13 @@ namespace FoodVisionMauiDemo.ViewModels
 
         public ObservableCollection<string> Alternatives { get; } = new();
 
+        public ObservableCollection<RiskScoreDisplayItem> RiskScoreProfile { get; } = new();
+
         public Command ContinueToSaveMealCommand { get; }
 
         public Command BackToScanCommand { get; }
+
+        public Command ReadExplanationCommand { get; }
 
         public string FoodName
         {
@@ -81,7 +88,10 @@ namespace FoodVisionMauiDemo.ViewModels
             private set
             {
                 if (SetProperty(ref _isBusy, value))
+                {
                     ContinueToSaveMealCommand.ChangeCanExecute();
+                    ReadExplanationCommand.ChangeCanExecute();
+                }
             }
         }
 
@@ -137,6 +147,7 @@ namespace FoodVisionMauiDemo.ViewModels
                 ReplaceCollection(Allergens, node.Allergens);
                 ReplaceCollection(Ingredients, node.Ingredients);
                 ReplaceCollection(Alternatives, node.Alternatives);
+                ReplaceCollection(RiskScoreProfile, BuildRiskScoreProfile(node.RiskScores));
 
                 NotifyListStates();
                 _hasLoaded = true;
@@ -164,6 +175,7 @@ namespace FoodVisionMauiDemo.ViewModels
                 ReplaceCollection(Allergens, _knowledgeNode.Allergens);
                 ReplaceCollection(Ingredients, _knowledgeNode.Ingredients);
                 ReplaceCollection(Alternatives, _knowledgeNode.Alternatives);
+                ReplaceCollection(RiskScoreProfile, BuildRiskScoreProfile(_knowledgeNode.RiskScores));
                 NotifyListStates();
             }
             finally
@@ -195,11 +207,61 @@ namespace FoodVisionMauiDemo.ViewModels
             await Shell.Current.GoToAsync(nameof(SaveMealPage), parameters);
         }
 
+        private async Task ReadExplanationAsync()
+        {
+            try
+            {
+                StatusMessage = "Reading explanation aloud...";
+                await _speechService.SpeakAsync($"{FoodName}. {Explanation}");
+                StatusMessage = "Explanation read aloud.";
+            }
+            catch (SpeechServiceException ex)
+            {
+                StatusMessage = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                StatusMessage = "Could not read the explanation aloud.";
+            }
+        }
+
         private static void ReplaceCollection(ObservableCollection<string> collection, IEnumerable<string> values)
         {
             collection.Clear();
             foreach (var value in values)
                 collection.Add(value);
+        }
+
+        private static void ReplaceCollection(
+            ObservableCollection<RiskScoreDisplayItem> collection,
+            IEnumerable<RiskScoreDisplayItem> values)
+        {
+            collection.Clear();
+            foreach (var value in values)
+                collection.Add(value);
+        }
+
+        private static IReadOnlyList<RiskScoreDisplayItem> BuildRiskScoreProfile(Dictionary<string, double> scores)
+        {
+            var labels = new Dictionary<string, string>
+            {
+                ["high_sugar"] = "Sugar load",
+                ["high_fat"] = "Fat load",
+                ["high_salt"] = "Salt load",
+                ["high_carb"] = "Refined carb load",
+                ["balanced"] = "Balance support",
+                ["high_protein"] = "Protein support"
+            };
+
+            return labels
+                .Select(pair => new RiskScoreDisplayItem
+                {
+                    Key = pair.Key,
+                    DisplayName = pair.Value,
+                    Score = scores.TryGetValue(pair.Key, out var score) ? score : 0
+                })
+                .ToList();
         }
 
         private void NotifyListStates()

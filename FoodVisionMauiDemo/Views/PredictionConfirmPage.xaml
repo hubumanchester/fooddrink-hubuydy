@@ -7,70 +7,135 @@
              x:DataType="viewModels:PredictionConfirmViewModel"
              Title="Confirm Food">
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="16">
-            <Label Text="Confirm Food"
-                   FontSize="28"
-                   FontAttributes="Bold" />
+        <VerticalStackLayout Padding="24,32,24,40" Spacing="20">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Confirm result"
+                       Style="{StaticResource EyebrowLabel}" />
+                <Label Text="Confirm Food"
+                       Style="{StaticResource Headline}"
+                       SemanticProperties.HeadingLevel="Level1" />
+                <Label Text="Choose the closest match before NutriLens maps it to the local food knowledge graph."
+                       Style="{StaticResource BodyMutedLabel}" />
+            </VerticalStackLayout>
 
             <Label Text="{Binding StatusMessage}"
-                   FontSize="16"
-                   TextColor="Gray" />
+                   Style="{StaticResource MutedLabel}" />
 
-            <Frame BorderColor="#E5E7EB"
-                   CornerRadius="8"
-                   Padding="4"
-                   HeightRequest="160"
-                   WidthRequest="160"
-                   HorizontalOptions="Center"
-                   IsVisible="{Binding HasThumbnail}">
-                <Image Source="{Binding ThumbnailSource}"
-                       Aspect="AspectFit" />
-            </Frame>
+            <Border Style="{StaticResource CardFrame}"
+                    Padding="8"
+                    HeightRequest="220"
+                    HorizontalOptions="Fill"
+                    IsVisible="{Binding HasThumbnail}">
+                <Grid>
+                    <Image Source="{Binding ThumbnailSource}"
+                           Aspect="AspectFill"
+                           SemanticProperties.Description="Thumbnail of the food image being confirmed." />
+                    <Border StrokeThickness="0"
+                            StrokeShape="RoundRectangle 14"
+                            Padding="10,6"
+                            Margin="12"
+                            BackgroundColor="{AppThemeBinding Light=#FFFFFC, Dark=#17221E}"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start">
+                        <Label Text="Review"
+                               Style="{StaticResource EyebrowLabel}" />
+                    </Border>
+                </Grid>
+            </Border>
 
-            <Frame BorderColor="#E5E7EB"
-                   CornerRadius="8"
-                   Padding="14"
+            <Border Style="{StaticResource CardFrame}"
                    IsVisible="{Binding HasPredictions}">
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="Select the best match"
-                           FontSize="18"
-                           FontAttributes="Bold" />
+                    <Border Style="{StaticResource WarningFrame}"
+                           IsVisible="{Binding IsLowConfidence}">
+                        <Label Text="{Binding LowConfidenceMessage}"
+                               Style="{StaticResource MutedLabel}"
+                               TextColor="{AppThemeBinding Light={StaticResource Warning}, Dark={StaticResource WarningSoft}}" />
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Select the best match"
+                               Style="{StaticResource SubHeadline}" />
+                        <Label Grid.Column="1"
+                               Text="Top 3"
+                               Style="{StaticResource MutedLabel}"
+                               VerticalOptions="Center" />
+                    </Grid>
                     <CollectionView ItemsSource="{Binding Predictions}"
                                     SelectedItem="{Binding SelectedPrediction}"
                                     SelectionMode="Single">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:FoodPrediction">
-                                <Grid ColumnDefinitions="*,Auto"
-                                      Padding="0,10">
-                                    <Label Text="{Binding RankedDisplayLabel}"
-                                           FontSize="16"
-                                           FontAttributes="Bold" />
-                                    <Label Grid.Column="1"
-                                           Text="{Binding ConfidenceText}"
-                                           FontSize="16"
-                                           TextColor="#2563EB" />
-                                </Grid>
+                                <Border Style="{StaticResource ListItemBorder}"
+                                        StrokeThickness="1"
+                                        Stroke="{AppThemeBinding Light={StaticResource StrokeSoft}, Dark={StaticResource StrokeSoftDark}}">
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SurfaceMuted}, Dark={StaticResource SurfaceMutedDark}}" />
+                                                    <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource StrokeSoft}, Dark={StaticResource StrokeSoftDark}}" />
+                                                    <Setter Property="StrokeThickness" Value="1" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#E8F7F2, Dark=#143D35}" />
+                                                    <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                                    <Setter Property="StrokeThickness" Value="2" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                        <Border StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 12"
+                                                WidthRequest="32"
+                                                HeightRequest="32"
+                                                BackgroundColor="{AppThemeBinding Light=#D1FAE5, Dark=#123D34}"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding Rank}"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center" />
+                                        </Border>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding DisplayLabel}"
+                                               FontAttributes="Bold" />
+                                        <Label Grid.Column="2"
+                                               Text="{Binding ConfidenceText}"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                    </Grid>
+                                </Border>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
+                    <Label Text="Or choose any Food-101 label"
+                           Style="{StaticResource SubHeadline}" />
+                    <Border Style="{StaticResource InputBorder}">
+                        <Picker Title="Manual Food-101 label"
+                                ItemsSource="{Binding ManualLabels}"
+                                SelectedItem="{Binding SelectedManualLabel}" />
+                    </Border>
                     <Button Text="Use Selected Food"
+                            ImageSource="icon_scan_white.svg"
+                            ContentLayout="Left,10"
+                            Style="{StaticResource SuccessButton}"
                             Command="{Binding ConfirmSelectionCommand}"
-                            BackgroundColor="#16A34A"
-                            TextColor="White" />
+                            SemanticProperties.Description="Confirm the selected prediction as the food label." />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame BorderColor="#FCA5A5"
-                   BackgroundColor="#FEF2F2"
-                   CornerRadius="8"
-                   Padding="14"
+            <Border Style="{StaticResource ErrorFrame}"
                    IsVisible="{Binding HasNoPredictions}">
                 <Label Text="No prediction results were received. Please return to Scan and analyse a food image again."
-                       FontSize="15"
-                       TextColor="#991B1B" />
-            </Frame>
+                       TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerSoft}}" />
+            </Border>
 
             <Button Text="Back to Scan"
+                    Style="{StaticResource SecondaryButton}"
                     Command="{Binding BackToScanCommand}" />
         </VerticalStackLayout>
     </ScrollView>

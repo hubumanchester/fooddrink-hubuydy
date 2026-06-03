@@ -9,10 +9,10 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <x:Double x:Key="TitleFontSize">32</x:Double>
-            <x:Double x:Key="SectionFontSize">22</x:Double>
+            <x:Double x:Key="TitleFontSize">34</x:Double>
+            <x:Double x:Key="SectionFontSize">21</x:Double>
             <x:Double x:Key="BodyFontSize">16</x:Double>
-            <x:Double x:Key="SmallFontSize">13</x:Double>
+            <x:Double x:Key="SmallFontSize">13.5</x:Double>
             <x:Double x:Key="ButtonFontSize">15.5</x:Double>
         </ResourceDictionary>
     </Application.Resources>

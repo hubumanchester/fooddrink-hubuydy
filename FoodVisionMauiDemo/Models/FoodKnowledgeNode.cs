@@ -10,6 +10,8 @@ namespace FoodVisionMauiDemo.Models
 
         public List<string> Tags { get; set; } = new();
 
+        public Dictionary<string, double> RiskScores { get; set; } = new();
+
         public List<string> Allergens { get; set; } = new();
 
         public List<string> Ingredients { get; set; } = new();

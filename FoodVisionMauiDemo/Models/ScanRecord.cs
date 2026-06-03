@@ -21,5 +21,9 @@ namespace FoodVisionMauiDemo.Models
         public string Portion { get; set; } = string.Empty;
 
         public string Notes { get; set; } = string.Empty;
+
+        public string VoiceNotePath { get; set; } = string.Empty;
+
+        public long VoiceNoteSizeBytes { get; set; }
     }
 }

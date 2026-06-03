@@ -9,5 +9,11 @@ namespace FoodVisionMauiDemo.Views
             InitializeComponent();
             BindingContext = new DashboardViewModel();
         }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await ((DashboardViewModel)BindingContext).LoadAsync();
+        }
     }
 }

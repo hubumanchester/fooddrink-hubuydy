@@ -18,10 +18,10 @@ namespace FoodVisionMauiDemo.Services
         {
             return NormalizeRiskTag(riskTag) switch
             {
-                "high_sugar" => "High Sugar",
-                "high_fat" => "High Fat",
-                "high_salt" => "High Salt",
-                "high_carb" => "High Carb",
+                "high_sugar" => "Sugar load",
+                "high_fat" => "Fat load",
+                "high_salt" => "Salt load",
+                "high_carb" => "Refined carb load",
                 _ => "Balanced"
             };
         }

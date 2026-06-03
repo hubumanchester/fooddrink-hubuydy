@@ -4,101 +4,1024 @@
       "foodKey": "pizza",
       "displayName": "Pizza",
       "cuisine": "Italian-American",
-      "tags": ["high_fat", "high_salt", "high_carb"],
-      "allergens": ["gluten", "milk"],
-      "ingredients": ["wheat crust", "cheese", "tomato sauce", "processed meat"],
-      "alternatives": ["thin-crust vegetable pizza", "grilled chicken salad", "wholegrain wrap"],
+      "tags": [
+        "high_fat",
+        "high_salt",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 1.5,
+        "high_fat": 7.8,
+        "high_salt": 8.2,
+        "high_carb": 7.4,
+        "balanced": 2.5,
+        "high_protein": 3.2
+      },
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "ingredients": [
+        "wheat crust",
+        "cheese",
+        "tomato sauce",
+        "processed meat"
+      ],
+      "alternatives": [
+        "thin-crust vegetable pizza",
+        "grilled chicken salad",
+        "wholegrain wrap"
+      ],
       "explanation": "Pizza can be energy dense because refined crust, cheese, and processed toppings often combine high carbohydrate, saturated fat, and sodium. A thinner crust and vegetable toppings can make the meal more balanced."
     },
     {
       "foodKey": "hamburger",
       "displayName": "Hamburger",
       "cuisine": "American",
-      "tags": ["high_fat", "high_salt", "high_carb"],
-      "allergens": ["gluten", "sesame", "milk"],
-      "ingredients": ["white bun", "beef patty", "cheese", "sauce", "pickles"],
-      "alternatives": ["grilled chicken burger", "lettuce-wrapped burger", "bean burger with salad"],
+      "tags": [
+        "high_fat",
+        "high_salt",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 2,
+        "high_fat": 7.5,
+        "high_salt": 7.8,
+        "high_carb": 6.3,
+        "balanced": 2.2,
+        "high_protein": 5
+      },
+      "allergens": [
+        "gluten",
+        "sesame",
+        "milk"
+      ],
+      "ingredients": [
+        "white bun",
+        "beef patty",
+        "cheese",
+        "sauce",
+        "pickles"
+      ],
+      "alternatives": [
+        "grilled chicken burger",
+        "lettuce-wrapped burger",
+        "bean burger with salad"
+      ],
       "explanation": "Hamburgers often contain refined bread, salty sauces, and fatty meat or cheese. Choosing lean protein, extra vegetables, and a smaller portion can reduce dietary risk."
     },
     {
       "foodKey": "ice_cream",
       "displayName": "Ice Cream",
       "cuisine": "Dessert",
-      "tags": ["high_sugar", "high_fat"],
-      "allergens": ["milk", "tree nuts"],
-      "ingredients": ["cream", "milk", "sugar", "flavouring"],
-      "alternatives": ["plain yogurt with fruit", "sorbet", "fresh fruit bowl"],
+      "tags": [
+        "high_sugar",
+        "high_fat"
+      ],
+      "riskScores": {
+        "high_sugar": 9,
+        "high_fat": 7,
+        "high_salt": 1,
+        "high_carb": 4,
+        "balanced": 1,
+        "high_protein": 2
+      },
+      "allergens": [
+        "milk",
+        "tree nuts"
+      ],
+      "ingredients": [
+        "cream",
+        "milk",
+        "sugar",
+        "flavouring"
+      ],
+      "alternatives": [
+        "plain yogurt with fruit",
+        "sorbet",
+        "fresh fruit bowl"
+      ],
       "explanation": "Ice cream is commonly high in added sugar and saturated fat. Smaller portions or fruit-based alternatives can help reduce sugar and fat intake."
     },
     {
       "foodKey": "sushi",
       "displayName": "Sushi",
       "cuisine": "Japanese",
-      "tags": ["balanced", "high_carb"],
-      "allergens": ["fish", "soy", "sesame"],
-      "ingredients": ["rice", "fish", "seaweed", "soy sauce", "vegetables"],
-      "alternatives": ["sashimi with salad", "brown rice sushi", "low-sodium soy sauce"],
+      "tags": [
+        "balanced",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 1.5,
+        "high_fat": 2.2,
+        "high_salt": 5.8,
+        "high_carb": 6.2,
+        "balanced": 6.8,
+        "high_protein": 6
+      },
+      "allergens": [
+        "fish",
+        "soy",
+        "sesame"
+      ],
+      "ingredients": [
+        "rice",
+        "fish",
+        "seaweed",
+        "soy sauce",
+        "vegetables"
+      ],
+      "alternatives": [
+        "sashimi with salad",
+        "brown rice sushi",
+        "low-sodium soy sauce"
+      ],
       "explanation": "Sushi can provide lean protein and seafood nutrients, but white rice and soy sauce can increase carbohydrate and sodium intake. Sashimi or brown rice options can improve balance."
     },
     {
       "foodKey": "ramen",
       "displayName": "Ramen",
       "cuisine": "Japanese",
-      "tags": ["high_salt", "high_carb", "high_fat"],
-      "allergens": ["gluten", "soy", "egg"],
-      "ingredients": ["wheat noodles", "broth", "pork", "egg", "soy sauce"],
-      "alternatives": ["vegetable noodle soup", "half-noodle ramen", "clear broth with extra greens"],
+      "tags": [
+        "high_salt",
+        "high_carb",
+        "high_fat"
+      ],
+      "riskScores": {
+        "high_sugar": 1.5,
+        "high_fat": 6.2,
+        "high_salt": 9,
+        "high_carb": 7.4,
+        "balanced": 2,
+        "high_protein": 5
+      },
+      "allergens": [
+        "gluten",
+        "soy",
+        "egg"
+      ],
+      "ingredients": [
+        "wheat noodles",
+        "broth",
+        "pork",
+        "egg",
+        "soy sauce"
+      ],
+      "alternatives": [
+        "vegetable noodle soup",
+        "half-noodle ramen",
+        "clear broth with extra greens"
+      ],
       "explanation": "Ramen broth and noodles can make the meal high in sodium and refined carbohydrates. Reducing broth intake and adding vegetables can lower risk."
     },
     {
       "foodKey": "fried_rice",
       "displayName": "Fried Rice",
       "cuisine": "Chinese",
-      "tags": ["high_carb", "high_salt", "high_fat"],
-      "allergens": ["egg", "soy"],
-      "ingredients": ["white rice", "egg", "oil", "soy sauce", "mixed vegetables"],
-      "alternatives": ["steamed rice with vegetables", "brown rice bowl", "cauliflower fried rice"],
+      "tags": [
+        "high_carb",
+        "high_salt",
+        "high_fat"
+      ],
+      "riskScores": {
+        "high_sugar": 2,
+        "high_fat": 6.8,
+        "high_salt": 7.3,
+        "high_carb": 8.5,
+        "balanced": 2.2,
+        "high_protein": 4.5
+      },
+      "allergens": [
+        "egg",
+        "soy"
+      ],
+      "ingredients": [
+        "white rice",
+        "egg",
+        "oil",
+        "soy sauce",
+        "mixed vegetables"
+      ],
+      "alternatives": [
+        "steamed rice with vegetables",
+        "brown rice bowl",
+        "cauliflower fried rice"
+      ],
       "explanation": "Fried rice combines refined rice with oil and salty seasonings. More vegetables, less oil, and brown rice can make it a better everyday choice."
     },
     {
       "foodKey": "pancakes",
       "displayName": "Pancakes",
       "cuisine": "Breakfast",
-      "tags": ["high_sugar", "high_carb"],
-      "allergens": ["gluten", "egg", "milk"],
-      "ingredients": ["flour", "egg", "milk", "syrup", "butter"],
-      "alternatives": ["oat pancakes", "Greek yogurt with berries", "wholegrain toast with eggs"],
+      "tags": [
+        "high_sugar",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 7.8,
+        "high_fat": 3.5,
+        "high_salt": 3.2,
+        "high_carb": 8.2,
+        "balanced": 1.8,
+        "high_protein": 2.5
+      },
+      "allergens": [
+        "gluten",
+        "egg",
+        "milk"
+      ],
+      "ingredients": [
+        "flour",
+        "egg",
+        "milk",
+        "syrup",
+        "butter"
+      ],
+      "alternatives": [
+        "oat pancakes",
+        "Greek yogurt with berries",
+        "wholegrain toast with eggs"
+      ],
       "explanation": "Pancakes are often high in refined carbohydrate, especially with syrup or sweet toppings. Wholegrain batter and fruit toppings can improve the meal profile."
     },
     {
       "foodKey": "french_fries",
       "displayName": "French Fries",
       "cuisine": "Fast Food",
-      "tags": ["high_fat", "high_salt", "high_carb"],
+      "tags": [
+        "high_fat",
+        "high_salt",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 2,
+        "high_fat": 8.2,
+        "high_salt": 8,
+        "high_carb": 7.3,
+        "balanced": 1.5,
+        "high_protein": 1.5
+      },
       "allergens": [],
-      "ingredients": ["potatoes", "frying oil", "salt"],
-      "alternatives": ["baked potato wedges", "side salad", "steamed vegetables"],
+      "ingredients": [
+        "potatoes",
+        "frying oil",
+        "salt"
+      ],
+      "alternatives": [
+        "baked potato wedges",
+        "side salad",
+        "steamed vegetables"
+      ],
       "explanation": "French fries are usually fried and salted, making them high in fat, sodium, and fast-digesting carbohydrate. Baked or vegetable sides are more balanced."
     },
     {
       "foodKey": "caesar_salad",
       "displayName": "Caesar Salad",
       "cuisine": "Western",
-      "tags": ["balanced", "high_fat", "high_salt"],
-      "allergens": ["fish", "egg", "milk", "gluten"],
-      "ingredients": ["romaine lettuce", "croutons", "parmesan", "caesar dressing", "anchovy"],
-      "alternatives": ["garden salad with vinaigrette", "grilled chicken salad", "dressing on the side"],
+      "tags": [
+        "balanced",
+        "high_fat",
+        "high_salt"
+      ],
+      "riskScores": {
+        "high_sugar": 2,
+        "high_fat": 6.8,
+        "high_salt": 6.8,
+        "high_carb": 3,
+        "balanced": 5.2,
+        "high_protein": 4.5
+      },
+      "allergens": [
+        "fish",
+        "egg",
+        "milk",
+        "gluten"
+      ],
+      "ingredients": [
+        "romaine lettuce",
+        "croutons",
+        "parmesan",
+        "caesar dressing",
+        "anchovy"
+      ],
+      "alternatives": [
+        "garden salad with vinaigrette",
+        "grilled chicken salad",
+        "dressing on the side"
+      ],
       "explanation": "Caesar salad includes vegetables, but dressing, cheese, and croutons can add fat and sodium. Asking for dressing on the side helps control the risk."
     },
     {
       "foodKey": "grilled_salmon",
       "displayName": "Grilled Salmon",
       "cuisine": "Seafood",
-      "tags": ["balanced", "high_protein"],
-      "allergens": ["fish"],
-      "ingredients": ["salmon", "olive oil", "lemon", "herbs", "vegetables"],
-      "alternatives": ["grilled trout", "tofu with vegetables", "skinless chicken with salad"],
+      "tags": [
+        "balanced",
+        "high_protein"
+      ],
+      "riskScores": {
+        "high_sugar": 0.5,
+        "high_fat": 3.2,
+        "high_salt": 2.4,
+        "high_carb": 1.2,
+        "balanced": 8.5,
+        "high_protein": 8.5
+      },
+      "allergens": [
+        "fish"
+      ],
+      "ingredients": [
+        "salmon",
+        "olive oil",
+        "lemon",
+        "herbs",
+        "vegetables"
+      ],
+      "alternatives": [
+        "grilled trout",
+        "tofu with vegetables",
+        "skinless chicken with salad"
+      ],
       "explanation": "Grilled salmon is a protein-rich option with beneficial fats. Pairing it with vegetables and whole grains can support a balanced meal."
+    },
+    {
+      "foodKey": "greek_salad",
+      "displayName": "Greek Salad",
+      "cuisine": "Mediterranean",
+      "tags": [
+        "balanced"
+      ],
+      "riskScores": {
+        "high_sugar": 1.5,
+        "high_fat": 4.2,
+        "high_salt": 4.8,
+        "high_carb": 2.2,
+        "balanced": 7.8,
+        "high_protein": 3
+      },
+      "allergens": [
+        "milk"
+      ],
+      "ingredients": [
+        "tomato",
+        "cucumber",
+        "olive",
+        "feta cheese",
+        "olive oil"
+      ],
+      "alternatives": [
+        "garden salad",
+        "grilled salmon",
+        "hummus with vegetables"
+      ],
+      "explanation": "Greek salad is vegetable-forward and can be a balanced choice. Feta and olives add sodium, so portion and dressing amount still matter."
+    },
+    {
+      "foodKey": "steak",
+      "displayName": "Steak",
+      "cuisine": "Western",
+      "tags": [
+        "high_protein",
+        "high_fat"
+      ],
+      "riskScores": {
+        "high_sugar": 0.5,
+        "high_fat": 7.3,
+        "high_salt": 3.8,
+        "high_carb": 0.5,
+        "balanced": 4.6,
+        "high_protein": 9
+      },
+      "allergens": [],
+      "ingredients": [
+        "beef",
+        "salt",
+        "pepper",
+        "butter",
+        "herbs"
+      ],
+      "alternatives": [
+        "grilled salmon",
+        "skinless chicken with vegetables",
+        "bean salad"
+      ],
+      "explanation": "Steak provides protein but can be high in saturated fat, especially in large portions. Pairing a smaller cut with vegetables improves balance."
+    },
+    {
+      "foodKey": "hot_dog",
+      "displayName": "Hot Dog",
+      "cuisine": "American",
+      "tags": [
+        "high_salt",
+        "high_fat",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 3,
+        "high_fat": 7.6,
+        "high_salt": 9.2,
+        "high_carb": 6.8,
+        "balanced": 1.5,
+        "high_protein": 4
+      },
+      "allergens": [
+        "gluten"
+      ],
+      "ingredients": [
+        "sausage",
+        "white bun",
+        "ketchup",
+        "mustard",
+        "relish"
+      ],
+      "alternatives": [
+        "grilled chicken sandwich",
+        "vegetable wrap",
+        "salad with lean protein"
+      ],
+      "explanation": "Hot dogs often combine processed meat, refined bread, and salty condiments. Leaner protein and more vegetables can reduce sodium and fat."
+    },
+    {
+      "foodKey": "donuts",
+      "displayName": "Donuts",
+      "cuisine": "Dessert",
+      "tags": [
+        "high_sugar",
+        "high_fat",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 9,
+        "high_fat": 8,
+        "high_salt": 3.5,
+        "high_carb": 8.8,
+        "balanced": 0.8,
+        "high_protein": 1.5
+      },
+      "allergens": [
+        "gluten",
+        "egg",
+        "milk"
+      ],
+      "ingredients": [
+        "flour",
+        "sugar",
+        "oil",
+        "glaze",
+        "egg"
+      ],
+      "alternatives": [
+        "fresh fruit bowl",
+        "plain yogurt with berries",
+        "oatmeal with fruit"
+      ],
+      "explanation": "Donuts are typically fried and sweetened, creating a high sugar, fat, and refined carbohydrate pattern. Smaller portions or fruit-based snacks are better everyday choices."
+    },
+    {
+      "foodKey": "chocolate_cake",
+      "displayName": "Chocolate Cake",
+      "cuisine": "Dessert",
+      "tags": [
+        "high_sugar",
+        "high_fat",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 9,
+        "high_fat": 8.3,
+        "high_salt": 2.5,
+        "high_carb": 8.5,
+        "balanced": 0.8,
+        "high_protein": 2
+      },
+      "allergens": [
+        "gluten",
+        "egg",
+        "milk"
+      ],
+      "ingredients": [
+        "flour",
+        "sugar",
+        "cocoa",
+        "butter",
+        "egg"
+      ],
+      "alternatives": [
+        "fruit bowl",
+        "small dark chocolate portion",
+        "Greek yogurt with berries"
+      ],
+      "explanation": "Chocolate cake is usually rich in added sugar and fat. Treating it as an occasional small portion helps keep the overall diet more balanced."
+    },
+    {
+      "foodKey": "waffles",
+      "displayName": "Waffles",
+      "cuisine": "Breakfast",
+      "tags": [
+        "high_sugar",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 7.5,
+        "high_fat": 4.5,
+        "high_salt": 3.5,
+        "high_carb": 8.5,
+        "balanced": 2,
+        "high_protein": 2.5
+      },
+      "allergens": [
+        "gluten",
+        "egg",
+        "milk"
+      ],
+      "ingredients": [
+        "flour",
+        "egg",
+        "milk",
+        "syrup",
+        "butter"
+      ],
+      "alternatives": [
+        "wholegrain toast with eggs",
+        "oatmeal with fruit",
+        "Greek yogurt with berries"
+      ],
+      "explanation": "Waffles can become high sugar and high carb when served with syrup or sweet toppings. Fruit and protein sides can improve the meal."
+    },
+    {
+      "foodKey": "tacos",
+      "displayName": "Tacos",
+      "cuisine": "Mexican",
+      "tags": [
+        "balanced",
+        "high_salt"
+      ],
+      "riskScores": {
+        "high_sugar": 2.5,
+        "high_fat": 5.2,
+        "high_salt": 6.8,
+        "high_carb": 5.5,
+        "balanced": 5.8,
+        "high_protein": 5.5
+      },
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "ingredients": [
+        "tortilla",
+        "meat",
+        "cheese",
+        "salsa",
+        "lettuce"
+      ],
+      "alternatives": [
+        "fish tacos with cabbage",
+        "bean bowl",
+        "grilled chicken salad"
+      ],
+      "explanation": "Tacos can be balanced with lean protein and vegetables, but cheese, sauces, and processed fillings may add sodium and fat."
+    },
+    {
+      "foodKey": "pad_thai",
+      "displayName": "Pad Thai",
+      "cuisine": "Thai",
+      "tags": [
+        "high_carb",
+        "high_salt",
+        "high_sugar"
+      ],
+      "riskScores": {
+        "high_sugar": 6.5,
+        "high_fat": 4.8,
+        "high_salt": 8.2,
+        "high_carb": 8,
+        "balanced": 3,
+        "high_protein": 4.5
+      },
+      "allergens": [
+        "peanuts",
+        "egg",
+        "fish"
+      ],
+      "ingredients": [
+        "rice noodles",
+        "egg",
+        "peanuts",
+        "fish sauce",
+        "sweet sauce"
+      ],
+      "alternatives": [
+        "vegetable stir-fry",
+        "grilled chicken salad",
+        "tom yum soup"
+      ],
+      "explanation": "Pad Thai often combines noodles, sweet sauce, and salty seasonings. More vegetables and a smaller noodle portion can improve balance."
+    },
+    {
+      "foodKey": "pho",
+      "displayName": "Pho",
+      "cuisine": "Vietnamese",
+      "tags": [
+        "high_salt",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 1.5,
+        "high_fat": 2.5,
+        "high_salt": 8.5,
+        "high_carb": 7.2,
+        "balanced": 5.5,
+        "high_protein": 5
+      },
+      "allergens": [
+        "fish"
+      ],
+      "ingredients": [
+        "rice noodles",
+        "broth",
+        "beef",
+        "herbs",
+        "fish sauce"
+      ],
+      "alternatives": [
+        "extra herbs and vegetables",
+        "smaller noodle portion",
+        "clear vegetable soup"
+      ],
+      "explanation": "Pho can be relatively light, but broth and noodles may raise sodium and carbohydrate intake. More herbs and vegetables can help."
+    },
+    {
+      "foodKey": "miso_soup",
+      "displayName": "Miso Soup",
+      "cuisine": "Japanese",
+      "tags": [
+        "balanced",
+        "high_salt"
+      ],
+      "riskScores": {
+        "high_sugar": 1,
+        "high_fat": 2,
+        "high_salt": 8,
+        "high_carb": 2,
+        "balanced": 6.5,
+        "high_protein": 4
+      },
+      "allergens": [
+        "soy"
+      ],
+      "ingredients": [
+        "miso paste",
+        "tofu",
+        "seaweed",
+        "scallion",
+        "broth"
+      ],
+      "alternatives": [
+        "low-sodium miso soup",
+        "vegetable soup",
+        "tofu salad"
+      ],
+      "explanation": "Miso soup is usually light and can include tofu and seaweed, but miso paste adds sodium. Low-sodium versions are more balanced."
+    },
+    {
+      "foodKey": "omelette",
+      "displayName": "Omelette",
+      "cuisine": "Breakfast",
+      "tags": [
+        "balanced",
+        "high_protein"
+      ],
+      "riskScores": {
+        "high_sugar": 0.5,
+        "high_fat": 4.5,
+        "high_salt": 3.5,
+        "high_carb": 1,
+        "balanced": 7,
+        "high_protein": 7
+      },
+      "allergens": [
+        "egg",
+        "milk"
+      ],
+      "ingredients": [
+        "egg",
+        "cheese",
+        "vegetables",
+        "butter",
+        "herbs"
+      ],
+      "alternatives": [
+        "vegetable omelette",
+        "tofu scramble",
+        "boiled eggs with salad"
+      ],
+      "explanation": "Omelettes can be protein-rich and balanced when vegetables are included. Cheese and butter can raise fat, so portion matters."
+    },
+    {
+      "foodKey": "chicken_curry",
+      "displayName": "Chicken Curry",
+      "cuisine": "South Asian",
+      "tags": [
+        "high_fat",
+        "high_salt"
+      ],
+      "riskScores": {
+        "high_sugar": 2.5,
+        "high_fat": 7.2,
+        "high_salt": 6.8,
+        "high_carb": 3.5,
+        "balanced": 4,
+        "high_protein": 7
+      },
+      "allergens": [
+        "milk",
+        "tree nuts"
+      ],
+      "ingredients": [
+        "chicken",
+        "curry sauce",
+        "cream",
+        "oil",
+        "spices"
+      ],
+      "alternatives": [
+        "grilled chicken with vegetables",
+        "tomato-based curry",
+        "lentil soup"
+      ],
+      "explanation": "Chicken curry can be protein-rich, but creamy sauces and oil can increase fat and sodium. Tomato-based or lighter curry is a better frequent option."
+    },
+    {
+      "foodKey": "spaghetti_bolognese",
+      "displayName": "Spaghetti Bolognese",
+      "cuisine": "Italian",
+      "tags": [
+        "high_carb",
+        "high_salt"
+      ],
+      "riskScores": {
+        "high_sugar": 2,
+        "high_fat": 4.8,
+        "high_salt": 6.5,
+        "high_carb": 8.2,
+        "balanced": 4,
+        "high_protein": 5
+      },
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "ingredients": [
+        "pasta",
+        "beef",
+        "tomato sauce",
+        "cheese",
+        "herbs"
+      ],
+      "alternatives": [
+        "wholegrain pasta with vegetables",
+        "zucchini noodles",
+        "tomato vegetable soup"
+      ],
+      "explanation": "Spaghetti bolognese is carbohydrate-heavy and can include salty sauce or cheese. Smaller pasta portions and vegetables improve balance."
+    },
+    {
+      "foodKey": "spaghetti_carbonara",
+      "displayName": "Spaghetti Carbonara",
+      "cuisine": "Italian",
+      "tags": [
+        "high_fat",
+        "high_salt",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 2,
+        "high_fat": 8.5,
+        "high_salt": 7.8,
+        "high_carb": 8.4,
+        "balanced": 2,
+        "high_protein": 5
+      },
+      "allergens": [
+        "gluten",
+        "egg",
+        "milk"
+      ],
+      "ingredients": [
+        "pasta",
+        "egg",
+        "cheese",
+        "bacon",
+        "pepper"
+      ],
+      "alternatives": [
+        "tomato pasta with vegetables",
+        "grilled salmon salad",
+        "vegetable soup"
+      ],
+      "explanation": "Carbonara combines pasta, cheese, egg, and salty cured meat, making it high in fat, sodium, and carbohydrate. Vegetable-based pasta is a lighter swap."
+    },
+    {
+      "foodKey": "macaroni_and_cheese",
+      "displayName": "Macaroni and Cheese",
+      "cuisine": "American",
+      "tags": [
+        "high_fat",
+        "high_salt",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 2.5,
+        "high_fat": 8.4,
+        "high_salt": 7.5,
+        "high_carb": 8.3,
+        "balanced": 1.8,
+        "high_protein": 4
+      },
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "ingredients": [
+        "macaroni",
+        "cheese",
+        "milk",
+        "butter",
+        "salt"
+      ],
+      "alternatives": [
+        "vegetable pasta bake",
+        "cauliflower cheese with light sauce",
+        "grilled chicken salad"
+      ],
+      "explanation": "Macaroni and cheese is often rich in refined pasta, cheese, and sodium. Adding vegetables or choosing a smaller portion can reduce risk."
+    },
+    {
+      "foodKey": "frozen_yogurt",
+      "displayName": "Frozen Yogurt",
+      "cuisine": "Dessert",
+      "tags": [
+        "high_sugar"
+      ],
+      "riskScores": {
+        "high_sugar": 8,
+        "high_fat": 2,
+        "high_salt": 1,
+        "high_carb": 4,
+        "balanced": 3,
+        "high_protein": 3
+      },
+      "allergens": [
+        "milk"
+      ],
+      "ingredients": [
+        "yogurt",
+        "sugar",
+        "fruit syrup",
+        "flavouring"
+      ],
+      "alternatives": [
+        "plain yogurt with berries",
+        "fresh fruit bowl",
+        "unsweetened tea"
+      ],
+      "explanation": "Frozen yogurt may sound light but can still contain added sugar, especially with toppings. Plain yogurt and fruit is usually more balanced."
+    },
+    {
+      "foodKey": "apple_pie",
+      "displayName": "Apple Pie",
+      "cuisine": "Dessert",
+      "tags": [
+        "high_sugar",
+        "high_fat",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 8.5,
+        "high_fat": 7.2,
+        "high_salt": 3,
+        "high_carb": 8,
+        "balanced": 1.5,
+        "high_protein": 2
+      },
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "ingredients": [
+        "apple",
+        "pastry",
+        "sugar",
+        "butter",
+        "cinnamon"
+      ],
+      "alternatives": [
+        "baked apple with cinnamon",
+        "fresh fruit bowl",
+        "oat crumble with less sugar"
+      ],
+      "explanation": "Apple pie includes fruit, but pastry and sugar make it high in refined carbohydrate and fat. Baked fruit is a lighter alternative."
+    },
+    {
+      "foodKey": "sashimi",
+      "displayName": "Sashimi",
+      "cuisine": "Japanese",
+      "tags": [
+        "balanced",
+        "high_protein"
+      ],
+      "riskScores": {
+        "high_sugar": 0.5,
+        "high_fat": 1.8,
+        "high_salt": 3.5,
+        "high_carb": 0.5,
+        "balanced": 8,
+        "high_protein": 9
+      },
+      "allergens": [
+        "fish",
+        "soy"
+      ],
+      "ingredients": [
+        "raw fish",
+        "soy sauce",
+        "wasabi",
+        "ginger"
+      ],
+      "alternatives": [
+        "grilled salmon",
+        "seaweed salad",
+        "tofu salad"
+      ],
+      "explanation": "Sashimi is high in protein and low in refined carbohydrate. Soy sauce can add sodium, so using less sauce helps."
+    },
+    {
+      "foodKey": "hummus",
+      "displayName": "Hummus",
+      "cuisine": "Middle Eastern",
+      "tags": [
+        "balanced",
+        "high_protein"
+      ],
+      "riskScores": {
+        "high_sugar": 1.5,
+        "high_fat": 4,
+        "high_salt": 4,
+        "high_carb": 4.5,
+        "balanced": 7,
+        "high_protein": 6.5
+      },
+      "allergens": [
+        "sesame"
+      ],
+      "ingredients": [
+        "chickpeas",
+        "tahini",
+        "olive oil",
+        "lemon",
+        "garlic"
+      ],
+      "alternatives": [
+        "vegetable sticks with hummus",
+        "bean salad",
+        "lentil soup"
+      ],
+      "explanation": "Hummus provides plant protein and fibre. Portion size and salty sides determine how balanced the snack or meal becomes."
+    },
+    {
+      "foodKey": "falafel",
+      "displayName": "Falafel",
+      "cuisine": "Middle Eastern",
+      "tags": [
+        "high_fat",
+        "high_carb"
+      ],
+      "riskScores": {
+        "high_sugar": 2,
+        "high_fat": 6.5,
+        "high_salt": 5.8,
+        "high_carb": 6.2,
+        "balanced": 4.5,
+        "high_protein": 4.5
+      },
+      "allergens": [
+        "sesame",
+        "gluten"
+      ],
+      "ingredients": [
+        "chickpeas",
+        "herbs",
+        "oil",
+        "pita",
+        "tahini sauce"
+      ],
+      "alternatives": [
+        "baked falafel salad",
+        "hummus with vegetables",
+        "grilled chicken salad"
+      ],
+      "explanation": "Falafel is made from legumes but is often fried and served with bread or rich sauce. Baked falafel with salad is a more balanced option."
     }
   ]
 }

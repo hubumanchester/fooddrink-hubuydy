@@ -62,8 +62,10 @@ namespace FoodVisionMauiDemo.Repositories
 
         public async Task<IReadOnlyList<MealLogItem>> GetRecentMealsAsync(int limit = 30)
         {
+            var utcStart = DateTime.Today.AddDays(-6).ToUniversalTime();
             var connection = await _database.GetConnectionAsync();
             var records = await connection.Table<ScanRecord>()
+                .Where(record => record.CreatedAtUtc >= utcStart)
                 .OrderByDescending(record => record.CreatedAtUtc)
                 .Take(limit)
                 .ToListAsync();
@@ -91,9 +93,12 @@ namespace FoodVisionMauiDemo.Repositories
                 {
                     ScanRecordId = record.Id,
                     CreatedAtUtc = record.CreatedAtUtc,
+                    FoodKey = snapshot?.FoodKey ?? record.ConfirmedLabel,
                     FoodName = !string.IsNullOrWhiteSpace(record.FoodName) ? record.FoodName : record.ConfirmedLabel,
                     Portion = record.Portion,
                     Tags = snapshot?.Tags ?? new List<string>(),
+                    RiskScores = snapshot?.RiskScores ?? new Dictionary<string, double>(),
+                    Allergens = snapshot?.Allergens ?? new List<string>(),
                     Alternatives = snapshot?.Alternatives ?? new List<string>()
                 });
             }
@@ -111,6 +116,22 @@ namespace FoodVisionMauiDemo.Repositories
                 transaction.Execute("DELETE FROM FoodNodeSnapshot WHERE ScanRecordId = ?", scanRecordId);
                 transaction.Execute("DELETE FROM ScanRecord WHERE Id = ?", scanRecordId);
             });
+        }
+
+        public async Task UpdateMealAsync(int scanRecordId, string mealType, string portion, string notes)
+        {
+            var connection = await _database.GetConnectionAsync();
+            var record = await connection.Table<ScanRecord>()
+                .Where(item => item.Id == scanRecordId)
+                .FirstOrDefaultAsync();
+
+            if (record == null)
+                throw new InvalidOperationException("Meal record not found.");
+
+            record.MealType = mealType;
+            record.Portion = portion;
+            record.Notes = notes?.Trim() ?? string.Empty;
+            await connection.UpdateAsync(record);
         }
 
         private async Task<IReadOnlyList<MealLogItem>> BuildMealLogItemsAsync(IReadOnlyList<ScanRecord> records)
@@ -132,9 +153,13 @@ namespace FoodVisionMauiDemo.Repositories
                     MealType = record.MealType,
                     Portion = record.Portion,
                     ImagePath = record.ImagePath,
+                    Notes = record.Notes,
+                    VoiceNotePath = record.VoiceNotePath,
+                    VoiceNoteSizeBytes = record.VoiceNoteSizeBytes,
                     CreatedAtUtc = record.CreatedAtUtc,
                     RiskTags = snapshot?.Tags ?? new List<string>()
                 });
+                items[^1].BeginEdit();
             }
 
             return items;

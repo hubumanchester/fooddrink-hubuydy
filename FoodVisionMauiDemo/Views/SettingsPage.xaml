@@ -6,41 +6,228 @@
              x:DataType="viewModels:SettingsViewModel"
              Title="Settings">
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="12">
-            <Label Text="Settings"
-                   FontSize="28"
-                   FontAttributes="Bold" />
+        <VerticalStackLayout Padding="24,32,24,40" Spacing="20">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="App controls"
+                       Style="{StaticResource EyebrowLabel}" />
+                <Label Text="Settings"
+                       Style="{StaticResource Headline}"
+                       SemanticProperties.HeadingLevel="Level1" />
+                <Label Text="Tune accessibility, live services, dietary preferences, and local data."
+                       Style="{StaticResource BodyMutedLabel}" />
+            </VerticalStackLayout>
 
-            <Frame BorderColor="#E5E7EB"
-                   CornerRadius="8"
-                   Padding="14">
+            <Label Text="{Binding StatusMessage}"
+                   Style="{StaticResource MutedLabel}" />
+
+            <Border Style="{StaticResource HeroCard}"
+                    SemanticProperties.Description="Settings overview for privacy, accessibility, and live services.">
+                <VerticalStackLayout Spacing="16">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Preference hub"
+                               Style="{StaticResource EyebrowLabel}"
+                               TextColor="#A7F3D0" />
+                        <Label Text="Make NutriLens fit your routine"
+                               Style="{StaticResource SubHeadline}"
+                               TextColor="{StaticResource White}" />
+                        <Label Text="Local scan history, speech, display comfort, and live nearby search stay under your control."
+                               TextColor="#DDF7EF"
+                               LineBreakMode="WordWrap" />
+                    </VerticalStackLayout>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <Border StrokeThickness="0"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="14"
+                                BackgroundColor="#1B5C54">
+                            <VerticalStackLayout Spacing="3">
+                                <Label Text="On-device"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource White}" />
+                                <Label Text="Model + records"
+                                       FontSize="{DynamicResource SmallFontSize}"
+                                       TextColor="#DDF7EF" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="14"
+                                BackgroundColor="#214A45">
+                            <VerticalStackLayout Spacing="3">
+                                <Label Text="Accessible"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource White}" />
+                                <Label Text="Speech + type"
+                                       FontSize="{DynamicResource SmallFontSize}"
+                                       TextColor="#DDF7EF" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource CardFrame}">
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                     <VerticalStackLayout Spacing="4">
+                        <Label Text="Connectivity"
+                               Style="{StaticResource EyebrowLabel}" />
                         <Label Text="Use Live API"
-                               FontSize="18"
-                               FontAttributes="Bold" />
+                               Style="{StaticResource SubHeadline}" />
                         <Label Text="When off, nearby recommendations will not call the live AMap service."
-                               FontSize="14"
-                               TextColor="Gray"
+                               Style="{StaticResource MutedLabel}"
                                LineBreakMode="WordWrap" />
                     </VerticalStackLayout>
                     <Switch Grid.Column="1"
                             IsToggled="{Binding UseLiveApi}" />
                 </Grid>
-            </Frame>
+            </Border>
 
-            <Label Text="{Binding AmapKeyStatus}"
-                   FontSize="15"
-                   TextColor="Gray" />
+            <Border Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Appearance"
+                                   Style="{StaticResource EyebrowLabel}" />
+                            <Label Text="Dark Mode"
+                                   Style="{StaticResource SubHeadline}" />
+                            <Label Text="Use a dark visual theme for better low-light readability."
+                                   Style="{StaticResource MutedLabel}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding DarkMode}" />
+                    </Grid>
 
-            <Label Text="{Binding ModelName}"
-                   FontSize="16" />
-            <Label Text="{Binding ResourceLocation}"
-                   FontSize="16"
-                   TextColor="Gray" />
-            <Label Text="{Binding PlaceholderNote}"
-                   FontSize="15"
-                   TextColor="Gray" />
+                    <Label Text="Font Size"
+                           FontAttributes="Bold" />
+                    <Border Style="{StaticResource InputBorder}">
+                        <Picker Title="Font size"
+                                ItemsSource="{Binding FontSizeOptions}"
+                                SelectedItem="{Binding FontSize}" />
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Speech"
+                                   Style="{StaticResource EyebrowLabel}" />
+                            <Label Text="Text-to-Speech Enabled"
+                                   Style="{StaticResource SubHeadline}" />
+                            <Label Text="Allow food explanations and risk summaries to be read aloud."
+                                   Style="{StaticResource MutedLabel}" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding TtsEnabled}" />
+                    </Grid>
+                    <Label Text="TTS Speed"
+                           FontAttributes="Bold" />
+                    <Slider Minimum="0.5"
+                            Maximum="1.5"
+                            Value="{Binding TtsSpeed}" />
+
+                    <Button Text="Test Text-to-Speech"
+                            ImageSource="icon_speaker_teal.svg"
+                            ContentLayout="Left,10"
+                            Style="{StaticResource SecondaryButton}"
+                            Command="{Binding TestTtsCommand}"
+                            SemanticProperties.Description="Play a short Text-to-Speech test sentence." />
+
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Save Scan History"
+                                   Style="{StaticResource SubHeadline}" />
+                            <Label Text="When off, Save Meal will not write new scan records to SQLite."
+                                   Style="{StaticResource MutedLabel}"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding SaveScanHistory}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Dietary Profile"
+                           Style="{StaticResource EyebrowLabel}" />
+                    <Label Text="Dietary Preference"
+                           FontAttributes="Bold" />
+                    <Border Style="{StaticResource InputBorder}">
+                        <Picker Title="Dietary preference"
+                                ItemsSource="{Binding DietaryPreferenceOptions}"
+                                SelectedItem="{Binding DietaryPreference}" />
+                    </Border>
+                    <Label Text="Avoid Allergens"
+                           FontAttributes="Bold" />
+                    <Grid ColumnDefinitions="*,*"
+                          RowDefinitions="Auto,Auto"
+                          ColumnSpacing="10"
+                          RowSpacing="10">
+                        <Border Style="{StaticResource ListItemBorder}"
+                                Margin="0">
+                            <HorizontalStackLayout Spacing="8">
+                                <CheckBox IsChecked="{Binding AvoidGluten}" />
+                                <Label Text="Gluten" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1"
+                                Style="{StaticResource ListItemBorder}"
+                                Margin="0">
+                            <HorizontalStackLayout Spacing="8">
+                                <CheckBox IsChecked="{Binding AvoidDairy}" />
+                                <Label Text="Dairy" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Border>
+                        <Border Grid.Row="1"
+                                Style="{StaticResource ListItemBorder}"
+                                Margin="0">
+                            <HorizontalStackLayout Spacing="8">
+                                <CheckBox IsChecked="{Binding AvoidNuts}" />
+                                <Label Text="Nuts" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Border>
+                        <Border Grid.Row="1"
+                                Grid.Column="1"
+                                Style="{StaticResource ListItemBorder}"
+                                Margin="0">
+                            <HorizontalStackLayout Spacing="8">
+                                <CheckBox IsChecked="{Binding AvoidEgg}" />
+                                <Label Text="Egg" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="About"
+                           Style="{StaticResource EyebrowLabel}" />
+                    <Label Text="About Model"
+                           Style="{StaticResource SubHeadline}" />
+                    <Label Text="{Binding ModelName}"
+                           FontAttributes="Bold" />
+                    <Label Text="Local MobileNetV2 Food-101 ONNX inference runs on device for food image recognition."
+                           Style="{StaticResource BodyMutedLabel}"
+                           LineBreakMode="WordWrap" />
+                    <Label Text="{Binding ResourceLocation}"
+                           Style="{StaticResource MutedLabel}" />
+                    <Label Text="{Binding AmapKeyStatus}"
+                           Style="{StaticResource MutedLabel}" />
+                    <Label Text="{Binding PlaceholderNote}"
+                           Style="{StaticResource MutedLabel}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Clear Local Data"
+                    ImageSource="icon_trash_red.svg"
+                    ContentLayout="Left,10"
+                    Style="{StaticResource DangerButton}"
+                    Clicked="OnClearLocalDataClicked"
+                    SemanticProperties.Description="Clear saved meals, local images, and voice notes from this device." />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -1,11 +1,23 @@
 namespace FoodVisionMauiDemo.Services
 {
-    public static class AmapApiOptions
+    public static partial class AmapApiOptions
     {
-        public const string WebServiceApiKey = "PUT_YOUR_AMAP_WEB_SERVICE_KEY_HERE";
+        private const string PlaceholderApiKey = "PUT_YOUR_AMAP_WEB_SERVICE_KEY_HERE";
+
+        public static string WebServiceApiKey
+        {
+            get
+            {
+                var apiKey = PlaceholderApiKey;
+                GetLocalWebServiceApiKey(ref apiKey);
+                return apiKey;
+            }
+        }
 
         public static bool HasConfiguredApiKey =>
             !string.IsNullOrWhiteSpace(WebServiceApiKey) &&
-            WebServiceApiKey != "PUT_YOUR_AMAP_WEB_SERVICE_KEY_HERE";
+            WebServiceApiKey != PlaceholderApiKey;
+
+        static partial void GetLocalWebServiceApiKey(ref string apiKey);
     }
 }

@@ -14,6 +14,10 @@ namespace FoodVisionMauiDemo.Models
 
         public string DataMessage { get; set; } = string.Empty;
 
+        public double NormalizedRiskScore { get; set; }
+
+        public string TrendSummary { get; set; } = "Stable";
+
         public int TotalMealCount { get; set; }
 
         public int TodayMealCount { get; set; }

@@ -34,9 +34,36 @@ namespace FoodVisionMauiDemo.Views
                 await ViewModel.DeleteMealAsync(meal);
         }
 
+        private async void OnUpdateMealClicked(object sender, EventArgs e)
+        {
+            if (sender is not Button button || button.BindingContext is not MealLogItem meal)
+                return;
+
+            await ViewModel.UpdateMealAsync(meal);
+        }
+
+        private async void OnVoiceNotePlaybackClicked(object sender, EventArgs e)
+        {
+            if (sender is not Button button || button.BindingContext is not MealLogItem meal)
+                return;
+
+            await ViewModel.ToggleVoiceNotePlaybackAsync(meal);
+        }
+
         private async void OnViewInsightsClicked(object sender, EventArgs e)
         {
             await Shell.Current.GoToAsync("//InsightsPage");
+        }
+
+        private async void OnScanFirstFoodClicked(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync("//VisionScanPage");
+        }
+
+        protected override void OnDisappearing()
+        {
+            ViewModel.StopVoiceNotePlayback();
+            base.OnDisappearing();
         }
     }
 }

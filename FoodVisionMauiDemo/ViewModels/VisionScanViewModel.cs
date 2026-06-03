@@ -14,8 +14,10 @@ namespace FoodVisionMauiDemo.ViewModels
         private string? _selectedImagePath;
         private ImageSource? _selectedImageSource;
         private string _statusMessage = "Ready. Take or select a food image.";
+        private string _lowConfidenceMessage = string.Empty;
         private bool _isBusy;
         private bool _isModelReady;
+        private bool _isLowConfidence;
 
         public VisionScanViewModel()
             : this(new FoodImageClassifierService(), new ImageStorageService())
@@ -73,6 +75,18 @@ namespace FoodVisionMauiDemo.ViewModels
         public bool HasNoImage => !HasImage;
 
         public bool HasPredictions => Predictions.Count > 0;
+
+        public bool IsLowConfidence
+        {
+            get => _isLowConfidence;
+            private set => SetProperty(ref _isLowConfidence, value);
+        }
+
+        public string LowConfidenceMessage
+        {
+            get => _lowConfidenceMessage;
+            private set => SetProperty(ref _lowConfidenceMessage, value);
+        }
 
         public async Task InitializeAsync()
         {
@@ -227,8 +241,14 @@ namespace FoodVisionMauiDemo.ViewModels
 
                 OnPropertyChanged(nameof(HasPredictions));
                 ConfirmResultCommand.ChangeCanExecute();
+                IsLowConfidence = Predictions.Count > 0 && Predictions[0].IsLowConfidence;
+                LowConfidenceMessage = IsLowConfidence
+                    ? "The model is not fully confident. Please review the Top-3 results before confirming."
+                    : string.Empty;
                 StatusMessage = Predictions.Count > 0
-                    ? $"Best match: {Predictions[0].DisplayLabel}"
+                    ? IsLowConfidence
+                        ? $"Best match: {Predictions[0].DisplayLabel}, but confidence is low."
+                        : $"Best match: {Predictions[0].DisplayLabel}"
                     : "No food predictions were returned. Please try another image.";
             }
             catch (FoodImageClassifierException ex)
@@ -287,6 +307,8 @@ namespace FoodVisionMauiDemo.ViewModels
                 return;
 
             Predictions.Clear();
+            IsLowConfidence = false;
+            LowConfidenceMessage = string.Empty;
             OnPropertyChanged(nameof(HasPredictions));
             ConfirmResultCommand.ChangeCanExecute();
         }

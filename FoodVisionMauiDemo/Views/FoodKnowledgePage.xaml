@@ -1,153 +1,180 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:FoodVisionMauiDemo.Models"
              xmlns:viewModels="clr-namespace:FoodVisionMauiDemo.ViewModels"
              x:Class="FoodVisionMauiDemo.Views.FoodKnowledgePage"
              x:DataType="viewModels:FoodKnowledgeViewModel"
              Title="Food Knowledge">
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="16">
-            <Label Text="{Binding FoodName}"
-                   FontSize="28"
-                   FontAttributes="Bold" />
+        <VerticalStackLayout Padding="24,32,24,40" Spacing="20">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Food knowledge"
+                       Style="{StaticResource EyebrowLabel}" />
+                <Label Text="{Binding FoodName}"
+                       Style="{StaticResource Headline}"
+                       SemanticProperties.HeadingLevel="Level1" />
+                <Label Text="Local explanation based on nutrition tags, allergens, ingredients, and alternatives."
+                       Style="{StaticResource BodyMutedLabel}" />
+            </VerticalStackLayout>
 
             <Label Text="{Binding StatusMessage}"
-                   FontSize="16"
-                   TextColor="Gray" />
+                   Style="{StaticResource MutedLabel}" />
 
             <ActivityIndicator IsVisible="{Binding IsBusy}"
                                IsRunning="{Binding IsBusy}"
-                               Color="#2563EB" />
+                               HorizontalOptions="Center" />
 
-            <Frame BorderColor="#FCA5A5"
-                   BackgroundColor="#FEF2F2"
-                   CornerRadius="8"
-                   Padding="14"
+            <Border Style="{StaticResource ErrorFrame}"
                    IsVisible="{Binding IsFallback}">
                 <Label Text="{Binding StatusMessage}"
-                       FontSize="15"
-                       TextColor="#991B1B" />
-            </Frame>
+                       TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerSoft}}" />
+            </Border>
 
-            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Cuisine"
-                           FontSize="13"
-                           TextColor="Gray" />
+            <Border Style="{StaticResource HeroCard}"
+                   SemanticProperties.Description="Cuisine card for the confirmed food.">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Matched profile"
+                           Style="{StaticResource EyebrowLabel}"
+                           TextColor="#A7F3D0" />
                     <Label Text="{Binding Cuisine}"
-                           FontSize="18"
-                           FontAttributes="Bold" />
+                           Style="{StaticResource SubHeadline}"
+                           TextColor="{StaticResource White}" />
+                    <Label Text="Matched from the local food knowledge graph."
+                           FontSize="{DynamicResource SmallFontSize}"
+                           TextColor="#DDF7EF" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
-            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+            <Border Style="{StaticResource CardFrame}"
+                    SemanticProperties.Description="Nutrition flags and possible allergens for the confirmed food.">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Dietary flags"
+                           Style="{StaticResource SubHeadline}" />
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Risk score profile"
+                               FontAttributes="Bold" />
+                        <CollectionView ItemsSource="{Binding RiskScoreProfile}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:RiskScoreDisplayItem">
+                                    <Border Style="{StaticResource ListItemBorder}">
+                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                            <Label Text="{Binding DisplayName}"
+                                                   FontAttributes="Bold" />
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding ScoreText}"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Risk tags"
+                               FontAttributes="Bold" />
+                        <CollectionView ItemsSource="{Binding Tags}">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Null}">
+                                    <Border Style="{StaticResource ChipFrame}">
+                                        <Label Text="{Binding .}"
+                                               Style="{StaticResource MutedLabel}"
+                                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Possible allergens"
+                               FontAttributes="Bold" />
+                        <CollectionView ItemsSource="{Binding Allergens}"
+                                        IsVisible="{Binding HasAllergens}">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Null}">
+                                    <Border Style="{StaticResource DangerChipFrame}">
+                                        <Label Text="{Binding .}"
+                                               Style="{StaticResource MutedLabel}"
+                                               TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerSoft}}" />
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <Label Text="No common allergens are listed for this item."
+                               Style="{StaticResource MutedLabel}"
+                               IsVisible="{Binding HasNoAllergens}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="16">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Common ingredients"
+                               Style="{StaticResource SubHeadline}" />
+                        <CollectionView ItemsSource="{Binding Ingredients}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Null}">
+                                    <Border Style="{StaticResource ListItemBorder}">
+                                        <Label Text="{Binding .}"
+                                               FontSize="{DynamicResource BodyFontSize}" />
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
+                    <BoxView HeightRequest="1" />
+
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Better alternatives"
+                               Style="{StaticResource SubHeadline}" />
+                        <CollectionView ItemsSource="{Binding Alternatives}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Null}">
+                                    <Border Style="{StaticResource ListItemBorder}">
+                                        <Label Text="{Binding .}"
+                                               FontSize="{DynamicResource BodyFontSize}" />
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource CardFrame}"
+                   SemanticProperties.Description="Knowledge graph explanation card for the confirmed food.">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="Nutrition Risk Tags"
-                           FontSize="18"
-                           FontAttributes="Bold" />
-                    <CollectionView ItemsSource="{Binding Tags}">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Null}">
-                                <Frame BorderColor="#BFDBFE"
-                                       BackgroundColor="#EFF6FF"
-                                       CornerRadius="8"
-                                       Padding="10,6"
-                                       Margin="0,0,4,4">
-                                    <Label Text="{Binding .}"
-                                           FontSize="14"
-                                           TextColor="#1D4ED8" />
-                                </Frame>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Possible Allergens"
-                           FontSize="18"
-                           FontAttributes="Bold" />
-                    <CollectionView ItemsSource="{Binding Allergens}"
-                                    IsVisible="{Binding HasAllergens}">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Null}">
-                                <Frame BorderColor="#FECACA"
-                                       BackgroundColor="#FEF2F2"
-                                       CornerRadius="8"
-                                       Padding="10,6"
-                                       Margin="0,0,4,4">
-                                    <Label Text="{Binding .}"
-                                           FontSize="14"
-                                           TextColor="#991B1B" />
-                                </Frame>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                    <Label Text="No common allergens are listed for this item."
-                           FontSize="14"
-                           TextColor="Gray"
-                           IsVisible="{Binding HasNoAllergens}" />
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Common Ingredients"
-                           FontSize="18"
-                           FontAttributes="Bold" />
-                    <CollectionView ItemsSource="{Binding Ingredients}">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Null}">
-                                <Label Text="{Binding .}"
-                                       FontSize="15"
-                                       Margin="0,3" />
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Better Alternatives"
-                           FontSize="18"
-                           FontAttributes="Bold" />
-                    <CollectionView ItemsSource="{Binding Alternatives}">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="{x:Null}">
-                                <Label Text="{Binding .}"
-                                       FontSize="15"
-                                       Margin="0,3" />
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Frame>
-
-            <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
-                <VerticalStackLayout Spacing="8">
                     <Label Text="Knowledge Graph Explanation"
-                           FontSize="18"
-                           FontAttributes="Bold" />
+                           Style="{StaticResource SubHeadline}" />
                     <Label Text="{Binding Explanation}"
-                           FontSize="15"
                            LineBreakMode="WordWrap" />
+                    <Button Text="Read Explanation"
+                            ImageSource="icon_speaker_teal.svg"
+                            ContentLayout="Left,10"
+                            Style="{StaticResource SecondaryButton}"
+                            Command="{Binding ReadExplanationCommand}"
+                            SemanticProperties.Description="Read the food knowledge explanation aloud." />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <Button Text="Continue to Save Meal"
+                    ImageSource="icon_save_white.svg"
+                    ContentLayout="Left,10"
+                    Style="{StaticResource SuccessButton}"
                     Command="{Binding ContinueToSaveMealCommand}"
-                    BackgroundColor="#16A34A"
-                    TextColor="White" />
+                    SemanticProperties.Description="Continue to save this meal." />
 
             <Button Text="Back to Scan"
+                    Style="{StaticResource SecondaryButton}"
                     Command="{Binding BackToScanCommand}" />
         </VerticalStackLayout>
     </ScrollView>

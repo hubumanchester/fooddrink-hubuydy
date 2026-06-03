@@ -101,6 +101,7 @@ namespace FoodVisionMauiDemo.Services
                 : node.DisplayName.Trim();
             node.Cuisine = string.IsNullOrWhiteSpace(node.Cuisine) ? "Unknown" : node.Cuisine.Trim();
             node.Tags = CleanList(node.Tags).Select(ToDisplayText).ToList();
+            node.RiskScores = NormalizeRiskScores(node.RiskScores, node.Tags);
             node.Allergens = CleanList(node.Allergens).Select(ToDisplayText).ToList();
             node.Ingredients = CleanList(node.Ingredients).Select(ToDisplayText).ToList();
             node.Alternatives = CleanList(node.Alternatives).Select(ToDisplayText).ToList();
@@ -134,6 +135,7 @@ namespace FoodVisionMauiDemo.Services
                     DisplayName = displayName,
                     Cuisine = "Unknown",
                     Tags = new List<string> { "Not Covered Yet" },
+                    RiskScores = new Dictionary<string, double>(),
                     Allergens = new List<string>(),
                     Ingredients = new List<string>(),
                     Alternatives = new List<string>
@@ -153,6 +155,36 @@ namespace FoodVisionMauiDemo.Services
                 .ToLowerInvariant()
                 .Replace(" ", "_")
                 .Replace("-", "_");
+        }
+
+        private static Dictionary<string, double> NormalizeRiskScores(
+            Dictionary<string, double>? scores,
+            IEnumerable<string> tags)
+        {
+            var normalized = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
+
+            if (scores != null)
+            {
+                foreach (var pair in scores)
+                {
+                    var key = NormalizeKey(pair.Key);
+                    if (IsKnownScoreKey(key))
+                        normalized[key] = Math.Clamp(pair.Value, 0, 10);
+                }
+            }
+
+            foreach (var tag in tags.Select(NormalizeKey))
+            {
+                if (IsKnownScoreKey(tag) && !normalized.ContainsKey(tag))
+                    normalized[tag] = tag is "balanced" or "high_protein" ? 7.0 : 7.2;
+            }
+
+            return normalized;
+        }
+
+        private static bool IsKnownScoreKey(string key)
+        {
+            return key is "high_sugar" or "high_fat" or "high_salt" or "high_carb" or "balanced" or "high_protein";
         }
 
         private static string ToDisplayText(string value)

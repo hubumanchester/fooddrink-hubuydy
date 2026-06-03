@@ -4,71 +4,184 @@
              xmlns:models="clr-namespace:FoodVisionMauiDemo.Models"
              xmlns:viewModels="clr-namespace:FoodVisionMauiDemo.ViewModels"
              x:Class="FoodVisionMauiDemo.Views.DailyLogPage"
+             x:Name="DailyLogRoot"
              x:DataType="viewModels:DailyLogViewModel"
              Title="Daily Log">
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="16">
-            <Label Text="Daily Log"
-                   FontSize="28"
-                   FontAttributes="Bold" />
+        <VerticalStackLayout Padding="24,32,24,40" Spacing="20">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Meal history"
+                       Style="{StaticResource EyebrowLabel}" />
+                <Label Text="Daily Log"
+                       Style="{StaticResource Headline}"
+                       SemanticProperties.HeadingLevel="Level1" />
+                <Label Text="Review meals saved on this device and keep notes tidy for future insights."
+                       Style="{StaticResource BodyMutedLabel}" />
+            </VerticalStackLayout>
 
             <Label Text="{Binding StatusMessage}"
-                   FontSize="16"
-                   TextColor="Gray" />
+                   Style="{StaticResource MutedLabel}" />
 
             <Button Text="View Insights"
+                    ImageSource="icon_chart_teal.svg"
+                    ContentLayout="Left,10"
+                    Style="{StaticResource SecondaryButton}"
                     Clicked="OnViewInsightsClicked"
-                    HorizontalOptions="Start" />
+                    HorizontalOptions="Start"
+                    SemanticProperties.Description="Open the dietary risk insights page." />
+
+            <Border Style="{StaticResource TintCardFrame}"
+                   IsVisible="{Binding HasTodayMeals}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Border StrokeThickness="0"
+                            StrokeShape="RoundRectangle 14"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            BackgroundColor="{AppThemeBinding Light=#D1FAE5, Dark=#123D34}">
+                        <Label Text="!"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="3">
+                        <Label Text="Today’s balance signal"
+                               Style="{StaticResource EyebrowLabel}" />
+                        <Label Text="{Binding TodayRiskSummary}"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                               LineBreakMode="WordWrap" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
 
             <ActivityIndicator IsVisible="{Binding IsBusy}"
                                IsRunning="{Binding IsBusy}"
-                               Color="#2563EB" />
+                               HorizontalOptions="Center" />
 
-            <Frame BorderColor="#E5E7EB"
-                   BackgroundColor="#F9FAFB"
-                   CornerRadius="8"
-                   Padding="18"
-                   IsVisible="{Binding HasNoMeals}">
-                <Label Text="No meals logged yet. Scan your first food."
-                       FontSize="16"
-                       HorizontalTextAlignment="Center"
-                       TextColor="Gray" />
-            </Frame>
+            <Border Style="{StaticResource CardFrame}"
+                    IsVisible="{Binding HasNoMeals}">
+                <VerticalStackLayout Spacing="12"
+                                     HorizontalOptions="Center">
+                    <Border StrokeThickness="0"
+                            StrokeShape="RoundRectangle 32"
+                            BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#123D34}"
+                            WidthRequest="64"
+                            HeightRequest="64"
+                            HorizontalOptions="Center">
+                        <Label Text="+"
+                               Style="{StaticResource EmptyStateMark}" />
+                    </Border>
+                    <Label Text="No meals logged yet"
+                           Style="{StaticResource SubHeadline}"
+                           HorizontalTextAlignment="Center" />
+                    <Label Text="Scan your first food to start building a daily dietary picture."
+                           Style="{StaticResource BodyMutedLabel}"
+                           HorizontalTextAlignment="Center" />
+                    <Button Text="Scan your first food"
+                            ImageSource="icon_scan_white.svg"
+                            ContentLayout="Left,10"
+                            Style="{StaticResource PrimaryButton}"
+                            Clicked="OnScanFirstFoodClicked"
+                            HorizontalOptions="Center"
+                            SemanticProperties.Description="Open the scan page to add the first meal." />
+                </VerticalStackLayout>
+            </Border>
 
             <VerticalStackLayout Spacing="10"
                                  IsVisible="{Binding HasTodayMeals}">
                 <Label Text="Today"
-                       FontSize="20"
-                       FontAttributes="Bold" />
+                       Style="{StaticResource SubHeadline}" />
                 <CollectionView ItemsSource="{Binding TodayMeals}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:MealLogItem">
-                            <Frame BorderColor="#E5E7EB"
-                                   CornerRadius="8"
-                                   Padding="14"
+                            <Border Style="{StaticResource CardFrame}"
                                    Margin="0,0,0,10">
-                                <VerticalStackLayout Spacing="6">
+                                <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="*,Auto">
                                         <Label Text="{Binding FoodName}"
-                                               FontSize="18"
-                                               FontAttributes="Bold" />
+                                               Style="{StaticResource SubHeadline}" />
                                         <Label Grid.Column="1"
                                                Text="{Binding TimeText}"
-                                               FontSize="14"
-                                               TextColor="Gray" />
+                                               Style="{StaticResource MutedLabel}" />
                                     </Grid>
                                     <Label Text="{Binding MealSummary}"
-                                           FontSize="15" />
-                                    <Label Text="{Binding RiskTagsText}"
-                                           FontSize="14"
-                                           TextColor="#1D4ED8" />
-                                    <Button Text="Delete"
-                                            Clicked="OnDeleteMealClicked"
-                                            BackgroundColor="#FEE2E2"
-                                            TextColor="#991B1B"
-                                            HorizontalOptions="Start" />
+                                           Style="{StaticResource BodyMutedLabel}" />
+                                    <Border StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 16"
+                                            Padding="0"
+                                            HeightRequest="156"
+                                            BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceMuted}, Dark={StaticResource SurfaceMutedDark}}"
+                                            IsVisible="{Binding HasImage}">
+                                        <Grid>
+                                            <Image Source="{Binding ImageSource}"
+                                                   Aspect="AspectFill"
+                                                   Opacity="0.38"
+                                                   Scale="1.08" />
+                                            <BoxView BackgroundColor="{AppThemeBinding Light=#F7FBF8, Dark=#0D1512}"
+                                                     Opacity="0.38" />
+                                            <Image Source="{Binding ImageSource}"
+                                                   Aspect="AspectFit"
+                                                   Margin="0"
+                                                   SemanticProperties.Description="Saved food image shown without cropping." />
+                                        </Grid>
+                                    </Border>
+                                    <Border StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14"
+                                            Padding="12,8"
+                                            BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#123D34}">
+                                        <Label Text="{Binding RiskTagsText}"
+                                               Style="{StaticResource EyebrowLabel}" />
+                                    </Border>
+                                    <Label Text="{Binding Notes}"
+                                           Style="{StaticResource MutedLabel}"
+                                           IsVisible="{Binding HasNotes}"
+                                           LineBreakMode="WordWrap" />
+                                    <Label Text="{Binding VoiceNoteStatus}"
+                                           Style="{StaticResource MutedLabel}" />
+                                    <Button Text="{Binding VoiceNotePlaybackButtonText}"
+                                            ImageSource="icon_speaker_teal.svg"
+                                            ContentLayout="Left,10"
+                                            Style="{StaticResource SecondaryButton}"
+                                            IsVisible="{Binding HasVoiceNote}"
+                                            Clicked="OnVoiceNotePlaybackClicked"
+                                            HorizontalOptions="Start"
+                                            SemanticProperties.Description="Play or stop this saved meal voice note." />
+                                    <Label Text="Edit log details"
+                                           Style="{StaticResource EyebrowLabel}" />
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                        <Border Style="{StaticResource InputBorder}">
+                                            <Picker Title="Meal type"
+                                                    ItemsSource="{Binding MealTypes}"
+                                                    SelectedItem="{Binding EditableMealType}" />
+                                        </Border>
+                                        <Border Grid.Column="1"
+                                                Style="{StaticResource InputBorder}">
+                                            <Picker Title="Portion"
+                                                    ItemsSource="{Binding PortionOptions}"
+                                                    SelectedItem="{Binding EditablePortion}" />
+                                        </Border>
+                                    </Grid>
+                                    <Border Style="{StaticResource InputBorder}"
+                                            Padding="14,8">
+                                        <Editor Placeholder="Notes"
+                                                Text="{Binding EditableNotes}"
+                                                AutoSize="TextChanges"
+                                                HeightRequest="70" />
+                                    </Border>
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                        <Button Text="Save Changes"
+                                                Style="{StaticResource SecondaryButton}"
+                                                Clicked="OnUpdateMealClicked"
+                                                HorizontalOptions="Start"
+                                                SemanticProperties.Description="Save edited meal type, portion, and notes." />
+                                        <Button Grid.Column="1"
+                                                Text="Delete"
+                                                Style="{StaticResource DangerButton}"
+                                                Clicked="OnDeleteMealClicked"
+                                                HorizontalOptions="Start" />
+                                    </Grid>
                                 </VerticalStackLayout>
-                            </Frame>
+                            </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
@@ -77,37 +190,98 @@
             <VerticalStackLayout Spacing="10"
                                  IsVisible="{Binding HasRecentMeals}">
                 <Label Text="Recent"
-                       FontSize="20"
-                       FontAttributes="Bold" />
+                       Style="{StaticResource SubHeadline}" />
                 <CollectionView ItemsSource="{Binding RecentMeals}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:MealLogItem">
-                            <Frame BorderColor="#E5E7EB"
-                                   CornerRadius="8"
-                                   Padding="14"
+                            <Border Style="{StaticResource CardFrame}"
                                    Margin="0,0,0,10">
-                                <VerticalStackLayout Spacing="6">
+                                <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="*,Auto">
                                         <Label Text="{Binding FoodName}"
-                                               FontSize="18"
-                                               FontAttributes="Bold" />
+                                               Style="{StaticResource SubHeadline}" />
                                         <Label Grid.Column="1"
                                                Text="{Binding DateTimeText}"
-                                               FontSize="14"
-                                               TextColor="Gray" />
+                                               Style="{StaticResource MutedLabel}" />
                                     </Grid>
                                     <Label Text="{Binding MealSummary}"
-                                           FontSize="15" />
-                                    <Label Text="{Binding RiskTagsText}"
-                                           FontSize="14"
-                                           TextColor="#1D4ED8" />
-                                    <Button Text="Delete"
-                                            Clicked="OnDeleteMealClicked"
-                                            BackgroundColor="#FEE2E2"
-                                            TextColor="#991B1B"
-                                            HorizontalOptions="Start" />
+                                           Style="{StaticResource BodyMutedLabel}" />
+                                    <Border StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 16"
+                                            Padding="0"
+                                            HeightRequest="156"
+                                            BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceMuted}, Dark={StaticResource SurfaceMutedDark}}"
+                                            IsVisible="{Binding HasImage}">
+                                        <Grid>
+                                            <Image Source="{Binding ImageSource}"
+                                                   Aspect="AspectFill"
+                                                   Opacity="0.38"
+                                                   Scale="1.08" />
+                                            <BoxView BackgroundColor="{AppThemeBinding Light=#F7FBF8, Dark=#0D1512}"
+                                                     Opacity="0.38" />
+                                            <Image Source="{Binding ImageSource}"
+                                                   Aspect="AspectFit"
+                                                   Margin="0"
+                                                   SemanticProperties.Description="Saved food image shown without cropping." />
+                                        </Grid>
+                                    </Border>
+                                    <Border StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14"
+                                            Padding="12,8"
+                                            BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#123D34}">
+                                        <Label Text="{Binding RiskTagsText}"
+                                               Style="{StaticResource EyebrowLabel}" />
+                                    </Border>
+                                    <Label Text="{Binding Notes}"
+                                           Style="{StaticResource MutedLabel}"
+                                           IsVisible="{Binding HasNotes}"
+                                           LineBreakMode="WordWrap" />
+                                    <Label Text="{Binding VoiceNoteStatus}"
+                                           Style="{StaticResource MutedLabel}" />
+                                    <Button Text="{Binding VoiceNotePlaybackButtonText}"
+                                            ImageSource="icon_speaker_teal.svg"
+                                            ContentLayout="Left,10"
+                                            Style="{StaticResource SecondaryButton}"
+                                            IsVisible="{Binding HasVoiceNote}"
+                                            Clicked="OnVoiceNotePlaybackClicked"
+                                            HorizontalOptions="Start"
+                                            SemanticProperties.Description="Play or stop this saved meal voice note." />
+                                    <Label Text="Edit log details"
+                                           Style="{StaticResource EyebrowLabel}" />
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                        <Border Style="{StaticResource InputBorder}">
+                                            <Picker Title="Meal type"
+                                                    ItemsSource="{Binding MealTypes}"
+                                                    SelectedItem="{Binding EditableMealType}" />
+                                        </Border>
+                                        <Border Grid.Column="1"
+                                                Style="{StaticResource InputBorder}">
+                                            <Picker Title="Portion"
+                                                    ItemsSource="{Binding PortionOptions}"
+                                                    SelectedItem="{Binding EditablePortion}" />
+                                        </Border>
+                                    </Grid>
+                                    <Border Style="{StaticResource InputBorder}"
+                                            Padding="14,8">
+                                        <Editor Placeholder="Notes"
+                                                Text="{Binding EditableNotes}"
+                                                AutoSize="TextChanges"
+                                                HeightRequest="70" />
+                                    </Border>
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                        <Button Text="Save Changes"
+                                                Style="{StaticResource SecondaryButton}"
+                                                Clicked="OnUpdateMealClicked"
+                                                HorizontalOptions="Start"
+                                                SemanticProperties.Description="Save edited meal type, portion, and notes." />
+                                        <Button Grid.Column="1"
+                                                Text="Delete"
+                                                Style="{StaticResource DangerButton}"
+                                                Clicked="OnDeleteMealClicked"
+                                                HorizontalOptions="Start" />
+                                    </Grid>
                                 </VerticalStackLayout>
-                            </Frame>
+                            </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>

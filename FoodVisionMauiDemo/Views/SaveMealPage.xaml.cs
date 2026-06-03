@@ -16,5 +16,11 @@ namespace FoodVisionMauiDemo.Views
         {
             ViewModel.ApplyQueryAttributes(query);
         }
+
+        protected override async void OnDisappearing()
+        {
+            await ViewModel.StopRecordingIfNeededAsync();
+            base.OnDisappearing();
+        }
     }
 }

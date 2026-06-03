@@ -7,127 +7,235 @@
              x:DataType="viewModels:InsightsViewModel"
              Title="Insights">
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="16">
-            <Label Text="Insights"
-                   FontSize="28"
-                   FontAttributes="Bold" />
+        <VerticalStackLayout Padding="24,32,24,40" Spacing="20">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="7-day balance"
+                       Style="{StaticResource EyebrowLabel}" />
+                <Label Text="Insights"
+                       Style="{StaticResource Headline}"
+                       SemanticProperties.HeadingLevel="Level1" />
+                <Label Text="A simple dietary balance indicator from your saved meals. Not medical advice."
+                       Style="{StaticResource BodyMutedLabel}" />
+            </VerticalStackLayout>
 
             <Label Text="{Binding StatusMessage}"
-                   FontSize="16"
-                   TextColor="Gray" />
+                   Style="{StaticResource MutedLabel}" />
+
+            <Border Style="{StaticResource TintCardFrame}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Border StrokeThickness="0"
+                            StrokeShape="RoundRectangle 14"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            BackgroundColor="{AppThemeBinding Light=#D1FAE5, Dark=#123D34}">
+                        <Label Text="S"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center" />
+                    </Border>
+                    <Grid Grid.Column="1"
+                          ColumnDefinitions="*,Auto"
+                          ColumnSpacing="10">
+                        <VerticalStackLayout Spacing="3">
+                            <Label Text="Shake refresh"
+                                   Style="{StaticResource EyebrowLabel}" />
+                            <Label Text="{Binding ShakeStatusMessage}"
+                                   Style="{StaticResource MutedLabel}"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                        <Border Grid.Column="1"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="10,6"
+                                BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#123D34}"
+                                VerticalOptions="Start">
+                            <Label Text="{Binding ShakeRefreshCount}"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                   SemanticProperties.Description="Detected shake refresh count." />
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
 
             <ActivityIndicator IsVisible="{Binding IsBusy}"
                                IsRunning="{Binding IsBusy}"
-                               Color="#2563EB" />
+                               HorizontalOptions="Center" />
 
-            <Frame BorderColor="#E5E7EB"
-                   BackgroundColor="#F9FAFB"
-                   CornerRadius="8"
-                   Padding="18"
-                   IsVisible="{Binding HasNoData}">
-                <VerticalStackLayout Spacing="8">
+            <Border Style="{StaticResource CardFrame}"
+                    IsVisible="{Binding HasNoData}">
+                <VerticalStackLayout Spacing="12"
+                                     HorizontalOptions="Center">
+                    <Border StrokeThickness="0"
+                            StrokeShape="RoundRectangle 32"
+                            BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#123D34}"
+                            WidthRequest="64"
+                            HeightRequest="64"
+                            HorizontalOptions="Center">
+                        <Label Text="+"
+                               Style="{StaticResource EmptyStateMark}" />
+                    </Border>
+                    <Label Text="Not enough meal data yet"
+                           Style="{StaticResource SubHeadline}"
+                           HorizontalTextAlignment="Center" />
                     <Label Text="There is not enough meal data yet. Add more meals to see trends."
-                           FontSize="16"
-                           HorizontalTextAlignment="Center"
-                           TextColor="Gray" />
-                    <Label Text="This page will show dietary balance patterns after meals are saved."
-                           FontSize="14"
-                           HorizontalTextAlignment="Center"
-                           TextColor="Gray" />
+                           Style="{StaticResource BodyMutedLabel}"
+                           HorizontalTextAlignment="Center" />
+                    <Button Text="Scan your first food"
+                            ImageSource="icon_scan_white.svg"
+                            ContentLayout="Left,10"
+                            Style="{StaticResource PrimaryButton}"
+                            Clicked="OnScanFirstFoodClicked"
+                            HorizontalOptions="Center"
+                            SemanticProperties.Description="Open the scan page to add meal data for insights." />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <VerticalStackLayout Spacing="16"
                                  IsVisible="{Binding HasData}">
-                <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Today Risk Level"
-                               FontSize="18"
-                               FontAttributes="Bold" />
-                        <Label Text="{Binding TodayRiskLevel}"
-                               FontSize="26"
-                               FontAttributes="Bold" />
-                        <Label Text="Dietary balance indicator only. This is not medical advice."
-                               FontSize="13"
-                               TextColor="Gray" />
-                    </VerticalStackLayout>
-                </Frame>
+                <Border Style="{StaticResource HeroCard}"
+                        SemanticProperties.Description="Today dietary balance indicator card with text risk level and color.">
+                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="12">
+                        <Label Text="Today's risk"
+                               Style="{StaticResource SubHeadline}"
+                               TextColor="{StaticResource White}" />
+                        <Label Grid.Column="1"
+                               Text="Indicator"
+                               FontSize="{DynamicResource SmallFontSize}"
+                               TextColor="#A7F3D0"
+                               VerticalOptions="Center" />
+                        <Label Grid.Row="1"
+                               Grid.ColumnSpan="2"
+                               Text="{Binding TodayRiskLevel}"
+                               Style="{StaticResource MetricLabel}"
+                               FontSize="44"
+                               TextColor="{StaticResource White}"
+                               SemanticProperties.Description="Today dietary risk level shown as text." />
+                        <Grid Grid.Row="2" Grid.ColumnSpan="2" ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <Border StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 18"
+                                    Padding="14"
+                                    BackgroundColor="#1A514A">
+                                <VerticalStackLayout Spacing="3">
+                                    <Label Text="Score"
+                                           TextColor="#A7F3D0"
+                                           FontSize="{DynamicResource SmallFontSize}" />
+                                    <Label Text="{Binding NormalizedRiskScoreText}"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource White}" />
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="1"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 18"
+                                    Padding="14"
+                                    BackgroundColor="#1A514A">
+                                <VerticalStackLayout Spacing="3">
+                                    <Label Text="Meaning"
+                                           TextColor="#A7F3D0"
+                                           FontSize="{DynamicResource SmallFontSize}" />
+                                    <Label Text="Balance cue"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource White}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Border>
 
-                <Frame BorderColor="#FDE68A"
-                       BackgroundColor="#FFFBEB"
-                       CornerRadius="8"
-                       Padding="14"
+                <Border Style="{StaticResource WarningFrame}"
                        IsVisible="{Binding HasLimitedData}">
                     <Label Text="{Binding DataMessage}"
-                           FontSize="14"
-                           TextColor="#92400E" />
-                </Frame>
+                           Style="{StaticResource MutedLabel}"
+                           TextColor="{AppThemeBinding Light={StaticResource Warning}, Dark={StaticResource WarningSoft}}" />
+                </Border>
 
-                <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                <Border Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="Last 7 Days Risk Scores"
-                               FontSize="18"
-                               FontAttributes="Bold" />
+                        <Label Text="Last 7 days risk scores"
+                               Style="{StaticResource SubHeadline}" />
                         <CollectionView ItemsSource="{Binding WeeklyScores}">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="models:RiskTagScore">
-                                    <Grid ColumnDefinitions="*,Auto"
-                                          Padding="0,8">
-                                        <Label Text="{Binding DisplayName}"
-                                               FontSize="16"
-                                               FontAttributes="Bold" />
-                                        <Label Grid.Column="1"
-                                               Text="{Binding ScoreText}"
-                                               FontSize="16"
-                                               TextColor="#2563EB" />
-                                    </Grid>
+                                    <Border Style="{StaticResource ListItemBorder}">
+                                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                            <Border StrokeThickness="0"
+                                                    StrokeShape="RoundRectangle 12"
+                                                    WidthRequest="28"
+                                                    HeightRequest="28"
+                                                    BackgroundColor="{AppThemeBinding Light=#D1FAE5, Dark=#123D34}"
+                                                    VerticalOptions="Center">
+                                                <Label Text="{Binding ShortLabel}"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                                       HorizontalTextAlignment="Center"
+                                                       VerticalTextAlignment="Center" />
+                                            </Border>
+                                            <Label Text="{Binding DisplayName}"
+                                                   Grid.Column="1"
+                                                   FontAttributes="Bold" />
+                                            <Label Grid.Column="2"
+                                                   Text="{Binding ScoreWithTrendText}"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                        </Grid>
+                                    </Border>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
-                <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                <Border Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="Risk Reason"
-                               FontSize="18"
-                               FontAttributes="Bold" />
+                               Style="{StaticResource SubHeadline}" />
                         <Label Text="{Binding Reason}"
-                               FontSize="15"
+                               FontSize="{DynamicResource BodyFontSize}"
+                               LineBreakMode="WordWrap" />
+                        <Label Text="{Binding TrendSummary}"
+                               FontSize="{DynamicResource BodyFontSize}"
                                LineBreakMode="WordWrap" />
                         <Label Text="{Binding DataMessage}"
-                               FontSize="13"
-                               TextColor="Gray" />
+                               Style="{StaticResource MutedLabel}" />
+                        <Button Text="Read Risk Summary"
+                                ImageSource="icon_speaker_teal.svg"
+                                ContentLayout="Left,10"
+                                Style="{StaticResource SecondaryButton}"
+                                Command="{Binding ReadRiskSummaryCommand}"
+                                SemanticProperties.Description="Read the current dietary risk summary aloud." />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
-                <Frame BorderColor="#E5E7EB" CornerRadius="8" Padding="14">
+                <Border Style="{StaticResource CardFrame}">
                     <VerticalStackLayout Spacing="10">
                         <Label Text="Alternative Food Suggestions"
-                               FontSize="18"
-                               FontAttributes="Bold" />
+                               Style="{StaticResource SubHeadline}" />
                         <CollectionView ItemsSource="{Binding Recommendations}">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="models:FoodRecommendation">
-                                    <VerticalStackLayout Padding="0,8" Spacing="3">
+                                    <Border Style="{StaticResource ListItemBorder}">
+                                    <VerticalStackLayout Spacing="4">
                                         <Label Text="{Binding Title}"
-                                               FontSize="16"
                                                FontAttributes="Bold" />
                                         <Label Text="{Binding Reason}"
-                                               FontSize="14"
-                                               TextColor="Gray"
+                                               Style="{StaticResource MutedLabel}"
                                                LineBreakMode="WordWrap" />
                                     </VerticalStackLayout>
+                                    </Border>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
                 <Button Text="Find Nearby Balanced Options"
+                        ImageSource="icon_location_white.svg"
+                        ContentLayout="Left,10"
+                        Style="{StaticResource SuccessButton}"
                         Command="{Binding FindNearbyCommand}"
-                        BackgroundColor="#16A34A"
-                        TextColor="White" />
+                        SemanticProperties.Description="Find nearby food places using live location and AMap service." />
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

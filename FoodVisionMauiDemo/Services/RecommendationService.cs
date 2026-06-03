@@ -4,13 +4,26 @@ namespace FoodVisionMauiDemo.Services
 {
     public class RecommendationService
     {
+        private readonly AppSettingsService _settingsService;
+
+        public RecommendationService()
+            : this(new AppSettingsService())
+        {
+        }
+
+        public RecommendationService(AppSettingsService settingsService)
+        {
+            _settingsService = settingsService;
+        }
+
         public IReadOnlyList<FoodRecommendation> RecommendAlternatives(RiskAnalysisResult analysis, int count = 3)
         {
             if (!analysis.HasData || string.IsNullOrWhiteSpace(analysis.DominantRiskTagKey))
-                return GenericRecommendations(count);
+                return ApplyPreferenceFilter(GenericRecommendations(count), count);
 
             var recommendations = analysis.Meals
-                .Where(meal => meal.Tags.Any(tag => RiskAnalysisService.NormalizeTag(tag) == analysis.DominantRiskTagKey))
+                .Where(meal => RiskAnalysisService.GetRiskScoreForTag(meal, analysis.DominantRiskTagKey) >= 5.0 ||
+                               meal.Tags.Any(tag => RiskAnalysisService.NormalizeTag(tag) == analysis.DominantRiskTagKey))
                 .SelectMany(meal => meal.Alternatives.Select(alternative => new FoodRecommendation
                 {
                     Title = alternative,
@@ -21,9 +34,11 @@ namespace FoodVisionMauiDemo.Services
                 .Take(count)
                 .ToList();
 
+            recommendations = ApplyPreferenceFilter(recommendations, count).ToList();
+
             return recommendations.Count > 0
                 ? recommendations
-                : GenericRecommendations(count);
+                : ApplyPreferenceFilter(GenericRecommendations(count), count);
         }
 
         private static IReadOnlyList<FoodRecommendation> GenericRecommendations(int count)
@@ -46,6 +61,60 @@ namespace FoodVisionMauiDemo.Services
                     Reason = "Keeps vegetables central and helps control sodium and fat."
                 }
             }.Take(count).ToList();
+        }
+
+        private IReadOnlyList<FoodRecommendation> ApplyPreferenceFilter(
+            IEnumerable<FoodRecommendation> recommendations,
+            int count)
+        {
+            var blockedTerms = GetBlockedTerms();
+            var filtered = recommendations
+                .Where(recommendation => !blockedTerms.Any(term =>
+                    recommendation.Title.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                    recommendation.Reason.Contains(term, StringComparison.OrdinalIgnoreCase)))
+                .Take(count)
+                .ToList();
+
+            if (filtered.Count > 0)
+                return filtered;
+
+            return new List<FoodRecommendation>
+            {
+                new()
+                {
+                    Title = "Simple vegetable bowl",
+                    Reason = "A flexible balanced option that can be adjusted around your saved dietary preferences."
+                },
+                new()
+                {
+                    Title = "Fresh salad with lean protein",
+                    Reason = "Keeps the recommendation broad when allergen or preference filters remove specific swaps."
+                },
+                new()
+                {
+                    Title = "Steamed vegetables with a plain protein",
+                    Reason = "A lower-risk fallback when recent meals repeat sugar, salt, fat, or refined carbohydrate."
+                }
+            }.Take(count).ToList();
+        }
+
+        private IReadOnlyList<string> GetBlockedTerms()
+        {
+            var terms = new List<string>();
+
+            if (_settingsService.DietaryPreference == "Gluten-free" || _settingsService.AvoidGluten)
+                terms.AddRange(new[] { "bread", "toast", "wrap", "wheat", "wholegrain", "crust", "noodle", "pasta" });
+
+            if (_settingsService.DietaryPreference == "Dairy-free" || _settingsService.AvoidDairy)
+                terms.AddRange(new[] { "milk", "cheese", "cream", "yogurt", "dairy" });
+
+            if (_settingsService.AvoidNuts)
+                terms.AddRange(new[] { "nut", "nuts", "almond", "peanut" });
+
+            if (_settingsService.AvoidEgg)
+                terms.Add("egg");
+
+            return terms;
         }
     }
 }

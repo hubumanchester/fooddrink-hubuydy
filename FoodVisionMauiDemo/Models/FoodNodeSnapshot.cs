@@ -19,6 +19,8 @@ namespace FoodVisionMauiDemo.Models
 
         public string TagsJson { get; set; } = "[]";
 
+        public string RiskScoresJson { get; set; } = "{}";
+
         public string AllergensJson { get; set; } = "[]";
 
         public string IngredientsJson { get; set; } = "[]";
@@ -34,6 +36,13 @@ namespace FoodVisionMauiDemo.Models
         {
             get => DeserializeList(TagsJson);
             set => TagsJson = SerializeList(value);
+        }
+
+        [Ignore]
+        public Dictionary<string, double> RiskScores
+        {
+            get => DeserializeScoreMap(RiskScoresJson);
+            set => RiskScoresJson = SerializeScoreMap(value);
         }
 
         [Ignore]
@@ -65,6 +74,7 @@ namespace FoodVisionMauiDemo.Models
                 DisplayName = node.DisplayName,
                 Cuisine = node.Cuisine,
                 Tags = node.Tags,
+                RiskScores = node.RiskScores,
                 Allergens = node.Allergens,
                 Ingredients = node.Ingredients,
                 Alternatives = node.Alternatives,
@@ -76,6 +86,11 @@ namespace FoodVisionMauiDemo.Models
         private static string SerializeList(IEnumerable<string>? values)
         {
             return JsonSerializer.Serialize(values ?? Array.Empty<string>());
+        }
+
+        private static string SerializeScoreMap(Dictionary<string, double>? values)
+        {
+            return JsonSerializer.Serialize(values ?? new Dictionary<string, double>());
         }
 
         private static List<string> DeserializeList(string? json)
@@ -90,6 +105,22 @@ namespace FoodVisionMauiDemo.Models
             catch
             {
                 return new List<string>();
+            }
+        }
+
+        private static Dictionary<string, double> DeserializeScoreMap(string? json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return new Dictionary<string, double>();
+
+            try
+            {
+                return JsonSerializer.Deserialize<Dictionary<string, double>>(json) ??
+                       new Dictionary<string, double>();
+            }
+            catch
+            {
+                return new Dictionary<string, double>();
             }
         }
     }

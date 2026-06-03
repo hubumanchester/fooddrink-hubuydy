@@ -30,12 +30,37 @@ namespace FoodVisionMauiDemo.Data
                 await _database.CreateTableAsync<ScanRecord>();
                 await _database.CreateTableAsync<PredictionResult>();
                 await _database.CreateTableAsync<FoodNodeSnapshot>();
+                await EnsureScanRecordColumnsAsync(_database);
+                await EnsureFoodNodeSnapshotColumnsAsync(_database);
 
                 return _database;
             }
             finally
             {
                 _initializationLock.Release();
+            }
+        }
+
+        private static async Task EnsureScanRecordColumnsAsync(SQLiteAsyncConnection database)
+        {
+            await TryAddColumnAsync(database, "ALTER TABLE ScanRecord ADD COLUMN VoiceNotePath TEXT DEFAULT ''");
+            await TryAddColumnAsync(database, "ALTER TABLE ScanRecord ADD COLUMN VoiceNoteSizeBytes INTEGER DEFAULT 0");
+        }
+
+        private static async Task EnsureFoodNodeSnapshotColumnsAsync(SQLiteAsyncConnection database)
+        {
+            await TryAddColumnAsync(database, "ALTER TABLE FoodNodeSnapshot ADD COLUMN RiskScoresJson TEXT DEFAULT '{}'");
+        }
+
+        private static async Task TryAddColumnAsync(SQLiteAsyncConnection database, string sql)
+        {
+            try
+            {
+                await database.ExecuteAsync(sql);
+            }
+            catch
+            {
+                // Column already exists or migration is not needed.
             }
         }
     }

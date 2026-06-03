@@ -2,6 +2,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using FoodVisionMauiDemo.Models;
 using FoodVisionMauiDemo.Views;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Storage;
 
 namespace FoodVisionMauiDemo.ViewModels
 {
@@ -11,15 +13,22 @@ namespace FoodVisionMauiDemo.ViewModels
         private string _imagePath = string.Empty;
         private ImageSource? _thumbnailSource;
         private string _statusMessage = "No predictions were available. Please go back to Scan and analyse a food image again.";
+        private string? _selectedManualLabel;
+        private string _lowConfidenceMessage = string.Empty;
         private bool _hasPredictions;
+        private bool _isLowConfidence;
 
         public PredictionConfirmViewModel()
         {
-            ConfirmSelectionCommand = new Command(async () => await ConfirmSelectionAsync(), () => SelectedPrediction != null);
+            ConfirmSelectionCommand = new Command(
+                async () => await ConfirmSelectionAsync(),
+                () => SelectedPrediction != null || !string.IsNullOrWhiteSpace(SelectedManualLabel));
             BackToScanCommand = new Command(async () => await Shell.Current.GoToAsync("//VisionScanPage"));
         }
 
         public ObservableCollection<FoodPrediction> Predictions { get; } = new();
+
+        public ObservableCollection<string> ManualLabels { get; } = new();
 
         public Command ConfirmSelectionCommand { get; }
 
@@ -65,14 +74,38 @@ namespace FoodVisionMauiDemo.ViewModels
 
         public bool HasThumbnail => ThumbnailSource != null;
 
+        public string? SelectedManualLabel
+        {
+            get => _selectedManualLabel;
+            set
+            {
+                if (SetProperty(ref _selectedManualLabel, value))
+                    ConfirmSelectionCommand.ChangeCanExecute();
+            }
+        }
+
+        public bool IsLowConfidence
+        {
+            get => _isLowConfidence;
+            private set => SetProperty(ref _isLowConfidence, value);
+        }
+
+        public string LowConfidenceMessage
+        {
+            get => _lowConfidenceMessage;
+            private set => SetProperty(ref _lowConfidenceMessage, value);
+        }
+
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             try
             {
                 Predictions.Clear();
                 SelectedPrediction = null;
+                SelectedManualLabel = null;
                 _imagePath = string.Empty;
                 ThumbnailSource = null;
+                _ = LoadManualLabelsAsync();
 
                 if (query.TryGetValue("Predictions", out var predictionsValue) &&
                     predictionsValue is IEnumerable<FoodPrediction> predictions)
@@ -86,10 +119,18 @@ namespace FoodVisionMauiDemo.ViewModels
                 if (HasPredictions)
                 {
                     SelectedPrediction = Predictions[0];
-                    StatusMessage = "Choose the prediction that best matches the food photo.";
+                    IsLowConfidence = Predictions[0].IsLowConfidence;
+                    LowConfidenceMessage = IsLowConfidence
+                        ? "The model is not fully confident. Please confirm carefully or choose a Food-101 label manually."
+                        : string.Empty;
+                    StatusMessage = IsLowConfidence
+                        ? "Low confidence result. Please confirm the closest match."
+                        : "Choose the prediction that best matches the food photo.";
                 }
                 else
                 {
+                    IsLowConfidence = false;
+                    LowConfidenceMessage = string.Empty;
                     StatusMessage = "No predictions were available. Please go back to Scan and analyse a food image again.";
                 }
 
@@ -111,9 +152,13 @@ namespace FoodVisionMauiDemo.ViewModels
 
         private async Task ConfirmSelectionAsync()
         {
-            if (SelectedPrediction == null)
+            var confirmedLabel = !string.IsNullOrWhiteSpace(SelectedManualLabel)
+                ? SelectedManualLabel
+                : SelectedPrediction?.Label;
+
+            if (string.IsNullOrWhiteSpace(confirmedLabel))
             {
-                StatusMessage = "Please choose a prediction before continuing.";
+                StatusMessage = "Please choose a prediction or manual Food-101 label before continuing.";
                 return;
             }
 
@@ -121,7 +166,7 @@ namespace FoodVisionMauiDemo.ViewModels
             {
                 var parameters = new Dictionary<string, object>
                 {
-                    ["FoodLabel"] = SelectedPrediction.Label,
+                    ["FoodLabel"] = confirmedLabel,
                     ["Predictions"] = Predictions.ToList()
                 };
 
@@ -134,6 +179,34 @@ namespace FoodVisionMauiDemo.ViewModels
             {
                 Debug.WriteLine(ex);
                 StatusMessage = "Could not open the food knowledge page. Please try again.";
+            }
+        }
+
+        private async Task LoadManualLabelsAsync()
+        {
+            if (ManualLabels.Count > 0)
+                return;
+
+            try
+            {
+                await using var stream = await FileSystem.Current.OpenAppPackageFileAsync("food101_labels.txt");
+                using var reader = new StreamReader(stream);
+                var text = await reader.ReadToEndAsync();
+                var labels = text.Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(label => label.Trim())
+                    .Where(label => !string.IsNullOrWhiteSpace(label))
+                    .OrderBy(label => label)
+                    .ToList();
+
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    foreach (var label in labels)
+                        ManualLabels.Add(label);
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
             }
         }
     }

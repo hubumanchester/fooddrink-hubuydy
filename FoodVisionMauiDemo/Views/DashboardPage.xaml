@@ -6,18 +6,147 @@
              x:DataType="viewModels:DashboardViewModel"
              Title="Dashboard">
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="14">
-            <Label Text="{Binding AppName}"
-                   FontSize="30"
-                   FontAttributes="Bold" />
-            <Label Text="{Binding Tagline}"
-                   FontSize="16"
-                   TextColor="Gray" />
-            <Label Text="{Binding CurrentPhaseStatus}"
-                   FontSize="16" />
-            <Label Text="Use the Scan tab to take or select a food image and run local Food-101 recognition."
-                   FontSize="15"
-                   TextColor="Gray" />
+        <VerticalStackLayout Padding="24,32,24,40" Spacing="22">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="NutriLens KG"
+                           Style="{StaticResource EyebrowLabel}" />
+                <Label Text="{Binding AppName}"
+                       Style="{StaticResource Headline}"
+                       SemanticProperties.HeadingLevel="Level1" />
+                <Label Text="{Binding Tagline}"
+                       Style="{StaticResource BodyMutedLabel}" />
+                <Label Text="{Binding StatusMessage}"
+                       Style="{StaticResource MutedLabel}" />
+                </VerticalStackLayout>
+                <Border Grid.Column="1"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 18"
+                        Padding="12,8"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource WarmAccentSoft}, Dark=#3A2A0A}"
+                        VerticalOptions="Start">
+                    <Label Text="Local AI"
+                           Style="{StaticResource EyebrowLabel}"
+                           TextColor="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource WarningSoft}}" />
+                </Border>
+            </Grid>
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
+                               HorizontalOptions="Center" />
+
+            <Border Style="{StaticResource HeroCard}"
+                    SemanticProperties.Description="Dashboard card showing today's dietary risk level and meal count.">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="14">
+                    <Label Text="Today's balance"
+                           Style="{StaticResource SubHeadline}"
+                           TextColor="{StaticResource White}" />
+                    <Border Grid.Column="1"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 16"
+                            Padding="12,8"
+                            BackgroundColor="#1E5A52"
+                            VerticalOptions="Center">
+                        <Label Text="{Binding TodayMealCount, StringFormat='{0} meals'}"
+                               FontAttributes="Bold"
+                               TextColor="#CFFAF0" />
+                    </Border>
+                    <Label Grid.Row="1"
+                           Grid.ColumnSpan="2"
+                           Text="{Binding TodayRiskLevel}"
+                           Style="{StaticResource MetricLabel}"
+                           FontSize="44"
+                           TextColor="{StaticResource White}" />
+                    <VerticalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="6">
+                        <Label Text="{Binding TodayRiskSummary}"
+                               FontSize="{DynamicResource BodyFontSize}"
+                               TextColor="#DDF7EF" />
+                    </VerticalStackLayout>
+                    <Grid Grid.Row="3" Grid.ColumnSpan="2" ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <Border StrokeThickness="0"
+                                StrokeShape="RoundRectangle 18"
+                                Padding="14"
+                                BackgroundColor="#1A514A">
+                            <VerticalStackLayout Spacing="3">
+                                <Label Text="Focus"
+                                       TextColor="#A7F3D0"
+                                       FontSize="{DynamicResource SmallFontSize}" />
+                                <Label Text="{Binding PrimaryRiskTag}"
+                                       TextColor="{StaticResource White}"
+                                       FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 18"
+                                Padding="14"
+                                BackgroundColor="#1A514A">
+                            <VerticalStackLayout Spacing="3">
+                                <Label Text="Privacy"
+                                       TextColor="#A7F3D0"
+                                       FontSize="{DynamicResource SmallFontSize}" />
+                                <Label Text="On-device"
+                                       TextColor="{StaticResource White}"
+                                       FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource CardFrame}"
+                   IsVisible="{Binding HasRecentMeal}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Most Recent Meal"
+                           Style="{StaticResource SubHeadline}" />
+                    <Label Text="{Binding RecentMealSummary}"
+                           Style="{StaticResource BodyMutedLabel}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource CardFrame}">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="Quick actions"
+                           Style="{StaticResource SubHeadline}" />
+                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,*" RowSpacing="12" ColumnSpacing="12">
+                        <Button Grid.ColumnSpan="2"
+                                Text="Scan Food"
+                                ImageSource="icon_scan_white.svg"
+                                ContentLayout="Left,10"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding ScanFoodCommand}"
+                                SemanticProperties.Description="Open the scan page to take or pick a food image." />
+                        <Button Grid.Row="1"
+                                Text="Daily Log"
+                                ImageSource="icon_log_teal.svg"
+                                ContentLayout="Left,10"
+                                Style="{StaticResource SecondaryButton}"
+                                Command="{Binding ViewTodayLogCommand}"
+                                SemanticProperties.Description="Open the daily meal log." />
+                        <Button Grid.Row="1"
+                                Grid.Column="1"
+                                Text="Insights"
+                                ImageSource="icon_chart_teal.svg"
+                                ContentLayout="Left,10"
+                                Style="{StaticResource SecondaryButton}"
+                                Command="{Binding ViewInsightsCommand}"
+                                SemanticProperties.Description="Open dietary risk insights." />
+                        <Button Grid.Row="2"
+                                Grid.ColumnSpan="2"
+                                Text="Find Nearby Balanced Options"
+                                ImageSource="icon_location_white.svg"
+                                ContentLayout="Left,10"
+                                Style="{StaticResource SuccessButton}"
+                                Command="{Binding FindNearbyCommand}"
+                                SemanticProperties.Description="Find nearby balanced food places based on the current risk focus." />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource TintCardFrame}">
+                <Label Text="{Binding CurrentPhaseStatus}"
+                       Style="{StaticResource BodyMutedLabel}" />
+            </Border>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

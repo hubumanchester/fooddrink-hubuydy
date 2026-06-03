@@ -7,231 +7,177 @@
              x:DataType="viewModels:VisionScanViewModel"
              Title="Vision Food Scan">
 
-    <Grid RowDefinitions="Auto,*">
-        <Border Style="{StaticResource TopBar}">
-            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
-                <Border Style="{StaticResource BrandAvatar}"
-                        BackgroundColor="{StaticResource Primary}">
-                    <Label Text="N"
-                           TextColor="{StaticResource PrimaryFixed}"
-                           FontFamily="OpenSansSemibold"
-                           FontSize="22"
-                           FontAttributes="Bold"
-                           HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center" />
-                </Border>
-                <Label Grid.Column="1"
-                       Text="NutriLens KG"
-                       TextColor="{StaticResource Primary}"
-                       FontFamily="OpenSansSemibold"
-                       FontSize="26"
-                       FontAttributes="Bold"
-                       VerticalOptions="Center"
-                       LineBreakMode="TailTruncation" />
-                <Border Grid.Column="2"
-                        Style="{StaticResource StrongChipFrame}">
-                    <Label Text="SCAN"
-                           Style="{StaticResource EyebrowLabel}"
-                           TextColor="{StaticResource Primary}" />
-                </Border>
-            </Grid>
-        </Border>
+    <ScrollView>
+        <VerticalStackLayout Padding="24,32,24,40" Spacing="20">
 
-        <ScrollView Grid.Row="1">
-            <VerticalStackLayout Style="{StaticResource PageStack}">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Food scan"
-                           Style="{StaticResource EyebrowLabel}" />
-                    <Label Text="Vision Food Scan"
-                           Style="{StaticResource Headline}"
-                           SemanticProperties.HeadingLevel="Level1" />
-                    <Label Text="Take or pick a food image, then analyse it locally with MobileNetV2 Food-101."
-                           Style="{StaticResource BodyMutedLabel}" />
-                </VerticalStackLayout>
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Food scan"
+                       Style="{StaticResource EyebrowLabel}" />
+                <Label Text="Vision Food Scan"
+                       Style="{StaticResource Headline}"
+                       SemanticProperties.HeadingLevel="Level1" />
+                <Label Text="Take or pick a food image, then analyse it locally with MobileNetV2 Food-101."
+                       Style="{StaticResource BodyMutedLabel}" />
+            </VerticalStackLayout>
 
-                <Border Style="{StaticResource CardFrame}"
-                        Padding="0"
-                        HeightRequest="520"
-                        HorizontalOptions="Fill">
-                    <Grid>
-                        <BoxView BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceHigh}, Dark=#1A211F}" />
-                        <Image Source="{Binding SelectedImageSource}"
-                               Aspect="AspectFill"
-                               SemanticProperties.Description="Food photo preview for local image recognition." />
-                        <BoxView BackgroundColor="#22000000" />
-
-                        <Border StrokeThickness="0"
-                                StrokeShape="RoundRectangle 24"
-                                Padding="18,10"
-                                Margin="0,24,0,0"
-                                BackgroundColor="#CC3B4745"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Start">
-                            <HorizontalStackLayout Spacing="10">
-                                <Label Text="ONNX"
-                                       Style="{StaticResource EyebrowLabel}"
-                                       TextColor="{StaticResource PrimaryFixed}" />
-                                <Label Text="ready for local analysis"
-                                       TextColor="{StaticResource White}"
-                                       FontFamily="OpenSansSemibold"
-                                       FontSize="15" />
-                            </HorizontalStackLayout>
-                        </Border>
-
-                        <Border Margin="44,104,44,116"
-                                Stroke="{StaticResource SecondaryFixed}"
-                                StrokeThickness="3"
-                                StrokeShape="RoundRectangle 24"
-                                BackgroundColor="#18FFFFFF">
-                            <Grid>
-                                <Label Text="+"
-                                       FontSize="56"
-                                       TextColor="#BFFFFFFF"
-                                       HorizontalTextAlignment="Center"
-                                       VerticalTextAlignment="Center" />
-                            </Grid>
-                        </Border>
-
-                        <VerticalStackLayout IsVisible="{Binding HasNoImage}"
-                                             Spacing="10"
-                                             HorizontalOptions="Center"
-                                             VerticalOptions="Center"
-                                             Padding="36,0">
-                            <Border Style="{StaticResource IconCircle}"
-                                    WidthRequest="72"
-                                    HeightRequest="72"
-                                    BackgroundColor="#EFFFFFFF">
-                                <Label Text="+"
-                                       Style="{StaticResource EmptyStateMark}" />
-                            </Border>
-                            <Label Text="Add a food photo"
-                                   TextColor="{StaticResource White}"
-                                   FontFamily="OpenSansSemibold"
-                                   FontSize="24"
-                                   FontAttributes="Bold"
-                                   HorizontalTextAlignment="Center" />
-                            <Label Text="Take a new photo or choose one from this device."
-                                   TextColor="#EFFFFFFF"
-                                   HorizontalTextAlignment="Center" />
-                        </VerticalStackLayout>
-
-                        <Grid ColumnDefinitions="Auto,Auto,Auto"
-                              ColumnSpacing="34"
-                              HorizontalOptions="Center"
-                              VerticalOptions="End"
-                              Margin="0,0,0,28">
-                            <Button Text=""
-                                    ImageSource="icon_gallery_teal.svg"
-                                    Style="{StaticResource SecondaryButton}"
-                                    WidthRequest="56"
-                                    HeightRequest="56"
-                                    CornerRadius="28"
-                                    Padding="0"
-                                    Command="{Binding PickImageCommand}"
-                                    SemanticProperties.Description="Choose a food image from this device." />
-                            <Button Grid.Column="1"
-                                    Text=""
-                                    ImageSource="icon_camera_teal.svg"
-                                    Style="{StaticResource PrimaryButton}"
-                                    BackgroundColor="{StaticResource SurfaceLowest}"
-                                    WidthRequest="76"
-                                    HeightRequest="76"
-                                    CornerRadius="38"
-                                    Padding="0"
-                                    Command="{Binding TakePhotoCommand}"
-                                    SemanticProperties.Description="Open the camera to take a food photo." />
-                            <Button Grid.Column="2"
-                                    Text=""
-                                    ImageSource="icon_scan_teal.svg"
-                                    Style="{StaticResource SecondaryButton}"
-                                    WidthRequest="56"
-                                    HeightRequest="56"
-                                    CornerRadius="28"
-                                    Padding="0"
-                                    Command="{Binding RetakePhotoCommand}"
-                                    IsVisible="{Binding HasImage}"
-                                    SemanticProperties.Description="Retake the current food photo." />
-                        </Grid>
-                    </Grid>
-                </Border>
-
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                    <Button Text="Analyse Food"
-                            ImageSource="icon_scan_white.svg"
-                            ContentLayout="Left,10"
-                            Style="{StaticResource PrimaryButton}"
-                            Command="{Binding AnalyseFoodCommand}"
-                            SemanticProperties.Description="Run the local ONNX food recognition model." />
-                    <ActivityIndicator Grid.Column="1"
-                                       IsVisible="{Binding IsBusy}"
-                                       IsRunning="{Binding IsBusy}"
-                                       VerticalOptions="Center" />
-                </Grid>
-
-                <Border Style="{StaticResource TintCardFrame}"
-                        Padding="16">
-                    <Label Text="{Binding StatusMessage}"
-                           Style="{StaticResource BodyMutedLabel}"
-                           HorizontalTextAlignment="Center" />
-                </Border>
-
-                <Border Style="{StaticResource CardFrame}"
-                        IsVisible="{Binding HasPredictions}">
-                    <VerticalStackLayout Spacing="18">
-                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                            <Border Style="{StaticResource IconCircle}"
-                                    WidthRequest="42"
-                                    HeightRequest="42">
-                                <Label Text="AI"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource Secondary}"
-                                       HorizontalTextAlignment="Center"
-                                       VerticalTextAlignment="Center" />
-                            </Border>
-                            <Label Grid.Column="1"
-                                   Text="Analysis Results"
-                                   Style="{StaticResource SubHeadline}"
-                                   VerticalOptions="Center" />
-                            <Label Grid.Column="2"
-                                   Text="Top 3"
-                                   Style="{StaticResource EyebrowLabel}"
-                                   VerticalOptions="Center" />
-                        </Grid>
-
-                        <Border Style="{StaticResource WarningFrame}"
-                                IsVisible="{Binding IsLowConfidence}">
-                            <Label Text="{Binding LowConfidenceMessage}"
-                                   Style="{StaticResource MutedLabel}"
-                                   TextColor="{AppThemeBinding Light={StaticResource Warning}, Dark={StaticResource WarningSoft}}" />
-                        </Border>
-
-                        <CollectionView ItemsSource="{Binding Predictions}">
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="models:FoodPrediction">
-                                    <VerticalStackLayout Spacing="6" Margin="0,0,0,14">
-                                        <Grid ColumnDefinitions="*,Auto">
-                                            <Label Text="{Binding DisplayLabel}"
-                                                   Style="{StaticResource TitleMd}" />
-                                            <Label Grid.Column="1"
-                                                   Text="{Binding ConfidenceText}"
-                                                   FontAttributes="Bold"
-                                                   TextColor="{StaticResource Secondary}" />
-                                        </Grid>
-                                        <ProgressBar Progress="{Binding Confidence}" />
-                                    </VerticalStackLayout>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-
-                        <Button Text="Confirm Result"
-                                ImageSource="icon_scan_white.svg"
-                                ContentLayout="Left,10"
-                                Style="{StaticResource SuccessButton}"
-                                Command="{Binding ConfirmResultCommand}"
-                                SemanticProperties.Description="Confirm one of the top food predictions." />
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                <Border Style="{StaticResource MiniTile}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="01"
+                               Style="{StaticResource EyebrowLabel}" />
+                        <Label Text="Image"
+                               FontAttributes="Bold" />
                     </VerticalStackLayout>
                 </Border>
-            </VerticalStackLayout>
-        </ScrollView>
-    </Grid>
+                <Border Grid.Column="1"
+                        Style="{StaticResource MiniTile}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="02"
+                               Style="{StaticResource EyebrowLabel}" />
+                        <Label Text="Analyse"
+                               FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2"
+                        Style="{StaticResource MiniTile}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="03"
+                               Style="{StaticResource EyebrowLabel}" />
+                        <Label Text="Confirm"
+                               FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Border Style="{StaticResource CardFrame}"
+                    Padding="8"
+                    HeightRequest="320"
+                    HorizontalOptions="Fill">
+                <Grid>
+                    <BoxView BackgroundColor="{AppThemeBinding Light=#F8FBF8, Dark=#1A211F}" />
+                    <Image Source="{Binding SelectedImageSource}"
+                           Aspect="AspectFill"
+                           SemanticProperties.Description="Food photo preview for local image recognition." />
+                    <Border StrokeThickness="0"
+                            StrokeShape="RoundRectangle 16"
+                            Padding="12,8"
+                            Margin="12"
+                            BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#17221E}"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start">
+                        <Label Text="Private scan"
+                               Style="{StaticResource EyebrowLabel}" />
+                    </Border>
+                    <VerticalStackLayout IsVisible="{Binding HasNoImage}"
+                                         Spacing="8"
+                                         HorizontalOptions="Center"
+                                         VerticalOptions="Center">
+                        <Border StrokeThickness="0"
+                                StrokeShape="RoundRectangle 32"
+                                BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#123D34}"
+                                WidthRequest="64"
+                                HeightRequest="64"
+                                HorizontalOptions="Center">
+                            <Label Text="+"
+                                   Style="{StaticResource EmptyStateMark}" />
+                        </Border>
+                        <Label Text="Add a food photo"
+                               Style="{StaticResource SubHeadline}"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="Take a new photo or choose one from this device."
+                               Style="{StaticResource BodyMutedLabel}"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,*" RowSpacing="12" ColumnSpacing="12">
+                <Button Text="Take Photo"
+                        ImageSource="icon_camera_teal.svg"
+                        ContentLayout="Left,10"
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding TakePhotoCommand}"
+                        SemanticProperties.Description="Open the camera to take a food photo." />
+                <Button Grid.Column="1"
+                        Text="Pick Image"
+                        ImageSource="icon_gallery_teal.svg"
+                        ContentLayout="Left,10"
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding PickImageCommand}"
+                        SemanticProperties.Description="Choose a food image from this device." />
+                <Button Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Text="Analyse Food"
+                        ImageSource="icon_scan_white.svg"
+                        ContentLayout="Left,10"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding AnalyseFoodCommand}"
+                        SemanticProperties.Description="Run the local ONNX food recognition model." />
+                <Button Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        Text="Retake Photo"
+                        ImageSource="icon_scan_teal.svg"
+                        ContentLayout="Left,10"
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding RetakePhotoCommand}"
+                        IsVisible="{Binding HasImage}"
+                        SemanticProperties.Description="Retake the current food photo." />
+            </Grid>
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
+                               HorizontalOptions="Center" />
+
+            <Border Style="{StaticResource TintCardFrame}"
+                   Padding="12">
+                <Label Text="{Binding StatusMessage}"
+                       Style="{StaticResource BodyMutedLabel}"
+                       HorizontalTextAlignment="Center" />
+            </Border>
+
+            <Border Style="{StaticResource CardFrame}"
+                   IsVisible="{Binding HasPredictions}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="Top-3 Predictions"
+                               Style="{StaticResource SubHeadline}" />
+                        <Label Grid.Column="1"
+                               Text="Local ONNX"
+                               Style="{StaticResource MutedLabel}"
+                               VerticalOptions="Center" />
+                    </Grid>
+                    <Border Style="{StaticResource WarningFrame}"
+                           IsVisible="{Binding IsLowConfidence}">
+                        <Label Text="{Binding LowConfidenceMessage}"
+                               Style="{StaticResource MutedLabel}"
+                               TextColor="{AppThemeBinding Light={StaticResource Warning}, Dark={StaticResource WarningSoft}}" />
+                    </Border>
+                        <CollectionView ItemsSource="{Binding Predictions}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:FoodPrediction">
+                                <Border Style="{StaticResource ListItemBorder}">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Text="{Binding RankedDisplayLabel}"
+                                               FontAttributes="Bold" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding ConfidenceText}"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Button Text="Confirm Result"
+                            ImageSource="icon_scan_white.svg"
+                            ContentLayout="Left,10"
+                            Style="{StaticResource SuccessButton}"
+                            Command="{Binding ConfirmResultCommand}"
+                            SemanticProperties.Description="Confirm one of the top food predictions." />
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

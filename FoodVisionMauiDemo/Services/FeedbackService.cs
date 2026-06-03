@@ -8,14 +8,14 @@ namespace FoodVisionMauiDemo.Services
         public Task SuccessAsync()
         {
             TryHaptic(HapticFeedbackType.Click);
-            TryVibrate(TimeSpan.FromMilliseconds(120));
+            TryVibrate(TimeSpan.FromMilliseconds(300));
             return Task.CompletedTask;
         }
 
         public Task WarningAsync()
         {
             TryHaptic(HapticFeedbackType.LongPress);
-            TryVibrate(TimeSpan.FromMilliseconds(250));
+            TryVibrate(TimeSpan.FromMilliseconds(300));
             return Task.CompletedTask;
         }
 
